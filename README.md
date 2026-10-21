@@ -1,4 +1,4 @@
 # OG Accessories Billing
 
-A simple billing app for OG Accessories. Make a bill, print it, or send it on WhatsApp.
-It works on a phone (Add to Home screen) and offline. Bills are saved only on the device.
+Billing app for OG Accessories: GST tax invoices (CGST/SGST or IGST, HSN codes),
+printing or PDF, and sharing on WhatsApp. It works on a phone (Add to Home screen) and offline.

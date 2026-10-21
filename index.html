@@ -17,17 +17,20 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; }
-  header.top { background: var(--brand); color: #fff; padding: .8rem 1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  header.top .logo { font-weight: 700; font-size: 1.15rem; letter-spacing: .5px; }
+  header.top { background: var(--brand); color: #fff; padding: .7rem 1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; }
+  header.top .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: .5px; }
   header.top .logo span { color: var(--gold); }
   header.top nav { display: flex; gap: .3rem; margin-left: auto; flex-wrap: wrap; }
-  header.top nav button { background: none; color: #e7e5e4; border: 1px solid #44403c; }
+  header.top nav button { background: none; color: #e7e5e4; border: 1px solid #44403c; padding: .45rem .8rem; }
   header.top nav button.on { background: var(--gold); border-color: var(--gold); color: #111; }
-  main { max-width: 980px; margin: 0 auto; padding: 1rem; }
+  main { max-width: 1000px; margin: 0 auto; padding: 1rem; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
-  h2 { font-size: 1.05rem; margin: 0 0 .75rem; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; }
-  label { display: flex; flex-direction: column; gap: .3rem; font-size: .88rem; color: var(--muted); }
+  h2 { font-size: 1.02rem; margin: 0 0 .75rem; }
+  h3 { font-size: .95rem; margin: 1rem 0 .5rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .75rem; }
+  label { display: flex; flex-direction: column; gap: .3rem; font-size: .86rem; color: var(--muted); }
+  label.check { flex-direction: row; align-items: center; gap: .5rem; color: var(--text); font-size: .92rem; }
+  label.check input { width: auto; }
   input, select, textarea, button { font: inherit; }
   input, select, textarea { padding: .55rem .7rem; border: 1px solid #d6d3d1; border-radius: 8px; width: 100%; background: #fff; color: var(--text); }
   input:focus, select:focus, textarea:focus { outline: 2px solid #fde68a; border-color: var(--gold); }
@@ -41,58 +44,97 @@
   .row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
   .row.end { justify-content: flex-end; }
   table { width: 100%; border-collapse: collapse; }
-  th, td { padding: .5rem .45rem; border-bottom: 1px solid var(--line); text-align: left; }
-  th { font-size: .82rem; color: var(--muted); font-weight: 500; }
+  th, td { padding: .5rem .45rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { font-size: .8rem; color: var(--muted); font-weight: 500; }
   .num { text-align: right; font-variant-numeric: tabular-nums; }
-  .items input { padding: .4rem .5rem; }
-  .items td.qty input { width: 70px; }
-  .items td.price input { width: 100px; }
-  .totals { max-width: 340px; margin-left: auto; }
-  .totals div { display: flex; justify-content: space-between; padding: .2rem 0; }
-  .totals .grand { font-size: 1.3rem; font-weight: 700; border-top: 1px solid var(--line); margin-top: .3rem; padding-top: .5rem; }
+  .items input, .items select { padding: .4rem .5rem; }
+  .items .w-qty { width: 64px; } .items .w-price { width: 96px; } .items .w-hsn { width: 84px; } .items .w-gst { width: 76px; }
+  .totals { max-width: 360px; margin-left: auto; }
+  .totals div { display: flex; justify-content: space-between; padding: .18rem 0; }
+  .totals .grand { font-size: 1.25rem; font-weight: 700; border-top: 1px solid var(--line); margin-top: .3rem; padding-top: .5rem; }
   .muted { color: var(--muted); }
   .msg { padding: .6rem .8rem; border-radius: 8px; margin-bottom: .75rem; }
   .msg.err { background: #fee2e2; color: var(--danger); }
   .msg.ok { background: #dcfce7; color: var(--ok); }
-  .badge { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font-size: .78rem; background: #f5f5f4; border: 1px solid var(--line); }
+  .badge { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font-size: .76rem; background: #f5f5f4; border: 1px solid var(--line); }
   .badge.paid { background: #dcfce7; color: var(--ok); border-color: #bbf7d0; }
   .badge.due { background: #fef3c7; color: #92400e; border-color: #fde68a; }
   tr.click { cursor: pointer; } tr.click:hover { background: #fafaf9; }
   .hidden { display: none !important; }
+  .imgbox { display: flex; align-items: center; gap: .6rem; }
+  .imgbox img { max-height: 56px; max-width: 160px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
 
-  /* the bill itself */
-  .bill { max-width: 720px; margin: 0 auto; background: #fff; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); color: #111; }
-  .bill .head { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 2px solid #111; padding-bottom: .75rem; margin-bottom: .75rem; }
-  .bill .shop { font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; }
-  .bill .shop span { color: var(--gold); }
-  .bill .small { font-size: .85rem; color: #444; line-height: 1.45; }
-  .bill .title { text-align: right; }
-  .bill .title b { font-size: 1.1rem; letter-spacing: 2px; }
-  .bill .to { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; }
-  .bill table th { color: #444; border-bottom: 1px solid #111; }
-  .bill .foot { text-align: center; margin-top: 1.2rem; font-size: .9rem; color: #444; }
-  .bill .status { display: inline-block; border: 2px solid; padding: .1rem .6rem; font-weight: 700; letter-spacing: 1px; margin-top: .4rem; }
-  .bill .status.paid { color: var(--ok); } .bill .status.cod { color: #b45309; }
+  /* ---------- the invoice ---------- */
+  .inv { max-width: 794px; margin: 0 auto; background: #fff; padding: 28px 32px; border: 1px solid var(--line); border-radius: 6px; color: #111; font-size: 13px; line-height: 1.45; }
+  .inv .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+  .inv .brand { display: flex; gap: 14px; align-items: center; }
+  .inv .brand img { max-height: 70px; max-width: 150px; }
+  .inv .shop { font-size: 22px; font-weight: 800; letter-spacing: .5px; }
+  .inv .shop span { color: var(--gold); }
+  .inv .small { font-size: 12px; color: #333; }
+  .inv .doc { text-align: right; }
+  .inv .doc .t { font-size: 18px; font-weight: 800; letter-spacing: 3px; }
+  .inv .doc .orig { font-size: 10px; color: #555; letter-spacing: 1px; }
+  .inv .bar { height: 3px; background: linear-gradient(90deg, #111 70%, var(--gold) 70%); margin: 14px 0; }
+  .inv .meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid #d4d4d4; margin-bottom: 12px; }
+  .inv .meta > div { padding: 8px 10px; border-right: 1px solid #d4d4d4; }
+  .inv .meta > div:last-child { border-right: none; }
+  .inv .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 2px; }
+  .inv .parties { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #d4d4d4; margin-bottom: 12px; }
+  .inv .parties > div { padding: 8px 10px; }
+  .inv .parties > div + div { border-left: 1px solid #d4d4d4; }
+  .inv table { font-size: 12px; }
+  .inv table th { background: #111; color: #fff; font-weight: 600; font-size: 11px; padding: 6px; border: none; }
+  .inv table td { padding: 6px; border-bottom: 1px solid #e5e5e5; }
+  .inv table.tax th { background: #f3f3f3; color: #111; border-bottom: 1px solid #d4d4d4; }
+  .inv .sum { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-top: 12px; }
+  .inv .tot div { display: flex; justify-content: space-between; padding: 3px 0; }
+  .inv .tot .grand { border-top: 2px solid #111; border-bottom: 2px solid #111; font-size: 15px; font-weight: 800; padding: 6px 0; margin-top: 4px; }
+  .inv .words { margin-top: 8px; font-size: 12px; }
+  .inv .stamp { display: inline-block; border: 2px solid; padding: 1px 8px; font-weight: 800; letter-spacing: 1px; font-size: 11px; }
+  .inv .stamp.paid { color: var(--ok); } .inv .stamp.due { color: #b45309; }
+  .inv .bottom { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-top: 16px; align-items: end; }
+  .inv .sign { text-align: right; }
+  .inv .sign img { max-height: 56px; max-width: 180px; display: block; margin: 4px 0 4px auto; }
+  .inv .sign .line { border-top: 1px solid #111; display: inline-block; padding-top: 4px; min-width: 170px; text-align: center; }
+  .inv .foot { text-align: center; font-size: 11px; color: #666; margin-top: 18px; border-top: 1px dashed #ccc; padding-top: 8px; }
+  .inv .terms { white-space: pre-line; }
 
-  /* small thermal receipt (80mm) */
-  .bill.receipt { max-width: 320px; padding: .8rem; font-size: .85rem; }
-  .bill.receipt .head { flex-direction: column; text-align: center; }
-  .bill.receipt .title { text-align: center; }
-  .bill.receipt .to { flex-direction: column; gap: .3rem; }
-  .bill.receipt .shop { font-size: 1.2rem; }
+  /* small thermal receipt */
+  .inv.receipt { max-width: 320px; padding: 12px; font-size: 12px; }
+  .inv.receipt .top, .inv.receipt .sum, .inv.receipt .bottom { display: block; text-align: center; }
+  .inv.receipt .brand { justify-content: center; }
+  .inv.receipt .doc { text-align: center; margin-top: 6px; }
+  .inv.receipt .meta, .inv.receipt .parties { display: block; }
+  .inv.receipt .meta > div, .inv.receipt .parties > div { border: none !important; padding: 3px 0; }
+  .inv.receipt .hide-r { display: none; }
+  .inv.receipt .tot { text-align: left; margin-top: 8px; }
+  .inv.receipt .sign { text-align: center; } .inv.receipt .sign img { margin: 4px auto; }
 
   @media print {
+    @page { margin: 10mm; }
     header.top, .no-print { display: none !important; }
     body, :root { background: #fff; }
     main { padding: 0; max-width: none; }
-    .bill { border: none; border-radius: 0; padding: 0; }
-    .card { border: none; padding: 0; }
+    .inv { border: none; padding: 0; max-width: none; }
+    .inv table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .inv .bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
-  @media (max-width: 640px) {
+  @media (max-width: 700px) {
+    main { padding: .6rem; }
     .items thead { display: none; }
-    .items tr { display: grid; grid-template-columns: 1fr 70px 100px auto; gap: .3rem; padding: .4rem 0; border-bottom: 1px solid var(--line); }
+    .items tr { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: .35rem; padding: .5rem 0; border-bottom: 1px solid var(--line); }
     .items td { border: none; padding: 0; }
+    .items td.name { grid-column: 1 / -1; }
+    .items .w-qty, .items .w-price, .items .w-hsn, .items .w-gst { width: 100%; }
     .items td.amt { display: none; }
+    .inv { padding: 14px; font-size: 12px; }
+    .inv .top, .inv .sum, .inv .bottom { display: block; }
+    .inv .doc { text-align: left; margin-top: 8px; }
+    .inv .meta, .inv .parties { grid-template-columns: 1fr; }
+    .inv .meta > div, .inv .parties > div + div { border-right: none; border-left: none; border-top: 1px solid #d4d4d4; }
+    .inv .tablewrap { overflow-x: auto; }
+    .inv .sign { margin-top: 12px; }
   }
 </style>
 </head>
@@ -114,18 +156,21 @@
     <div class="card">
       <h2>Customer</h2>
       <div class="grid">
-        <label>Name<input id="cName" placeholder="Customer name" /></label>
+        <label>Name *<input id="cName" placeholder="Customer name" /></label>
         <label>WhatsApp / Phone<input id="cPhone" inputmode="tel" placeholder="10-digit mobile" /></label>
-        <label>Order ID / Platform<input id="cOrder" placeholder="e.g. Insta, Meesho #1234" /></label>
+        <label>State (place of supply)<select id="cState"></select></label>
+        <label class="gstonly">Customer GSTIN (if business)<input id="cGstin" placeholder="Optional" maxlength="15" /></label>
+        <label>Order ID / Platform<input id="cOrder" placeholder="e.g. Instagram, Meesho #1234" /></label>
       </div>
-      <label style="margin-top:.75rem">Delivery address<textarea id="cAddr" rows="2" placeholder="House, street, city, state, pincode"></textarea></label>
+      <label style="margin-top:.75rem">Address (bill to / ship to)<textarea id="cAddr" rows="2" placeholder="House, street, city, pincode"></textarea></label>
     </div>
 
     <div class="card">
-      <h2>Items</h2>
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Items</h2>
+        <span class="muted gstonly" id="priceBasisNote" style="font-size:.85rem"></span></div>
       <datalist id="catalog"></datalist>
-      <table class="items">
-        <thead><tr><th>Product</th><th>Qty</th><th>Price ₹</th><th class="num amt">Amount</th><th></th></tr></thead>
+      <table class="items" style="margin-top:.5rem">
+        <thead><tr><th>Product</th><th class="gstonly">HSN</th><th>Qty</th><th>Price ₹</th><th class="gstonly">GST %</th><th class="num amt">Amount</th><th></th></tr></thead>
         <tbody id="itemRows"></tbody>
       </table>
       <div class="row" style="margin-top:.6rem"><button id="addItem">+ Add item</button></div>
@@ -137,24 +182,16 @@
         <label>Shipping / delivery ₹<input id="shipping" type="number" min="0" step="0.01" placeholder="0" /></label>
         <label>Payment
           <select id="payMode">
-            <option value="Prepaid (UPI)">Prepaid (UPI)</option>
-            <option value="Cash on Delivery">Cash on Delivery</option>
-            <option value="Cash">Cash</option>
-            <option value="Bank transfer">Bank transfer</option>
-            <option value="Card">Card</option>
+            <option>Prepaid (UPI)</option><option>Cash on Delivery</option><option>Cash</option>
+            <option>Bank transfer</option><option>Card</option>
           </select>
         </label>
         <label>Payment status
           <select id="payStatus"><option value="PAID">Paid</option><option value="DUE">Due / COD</option></select>
         </label>
       </div>
-      <label style="margin-top:.75rem">Note on bill (optional)<input id="note" placeholder="e.g. Gift wrap, exchange in 7 days" /></label>
-      <div class="totals" style="margin-top:1rem">
-        <div><span>Subtotal</span><span id="tSub">₹0.00</span></div>
-        <div id="tDiscRow"><span>Discount</span><span id="tDisc">−₹0.00</span></div>
-        <div id="tShipRow"><span>Shipping</span><span id="tShip">₹0.00</span></div>
-        <div class="grand"><span>Total</span><span id="tTotal">₹0.00</span></div>
-      </div>
+      <label style="margin-top:.75rem">Note on bill (optional)<input id="note" placeholder="e.g. Gift wrapped" /></label>
+      <div class="totals" style="margin-top:1rem" id="liveTotals"></div>
       <div class="row end" style="margin-top:1rem">
         <button id="clearBill">Clear</button>
         <button class="gold" id="saveBill">Save &amp; show bill</button>
@@ -165,11 +202,11 @@
   <!-- BILL VIEW -->
   <section id="tab-view" class="hidden">
     <div class="row no-print" style="margin-bottom:.8rem">
-      <button id="backBtn">← Back</button>
+      <button id="backBtn">← Bills</button>
       <span style="flex:1"></span>
-      <label class="row" style="flex-direction:row;color:var(--text)"><input type="checkbox" id="receiptMode" style="width:auto" /> Small receipt (80mm)</label>
-      <button class="wa" id="waBtn">Send on WhatsApp</button>
-      <button class="primary" id="printBtn">Print</button>
+      <label class="check"><input type="checkbox" id="receiptMode" /> Small receipt</label>
+      <button class="wa" id="waBtn">WhatsApp</button>
+      <button class="primary" id="printBtn">Print / PDF</button>
       <button id="editBtn">Edit</button>
       <button class="danger" id="delBtn">Delete</button>
     </div>
@@ -180,14 +217,14 @@
   <section id="tab-history" class="hidden">
     <div class="card">
       <div class="row">
-        <input id="hSearch" placeholder="Search name, phone, bill no. or order ID…" style="flex:1" />
+        <input id="hSearch" placeholder="Search name, phone, invoice no. or order ID…" style="flex:1;min-width:200px" />
         <select id="hMonth" style="width:auto"></select>
       </div>
       <div class="row muted" style="margin-top:.6rem" id="hSummary"></div>
     </div>
     <div class="card" style="overflow-x:auto">
       <table>
-        <thead><tr><th>Bill</th><th>Date</th><th>Customer</th><th>Payment</th><th class="num">Total</th></tr></thead>
+        <thead><tr><th>Invoice</th><th>Date</th><th>Customer</th><th>Payment</th><th class="num">Total</th></tr></thead>
         <tbody id="hRows"></tbody>
       </table>
     </div>
@@ -197,15 +234,17 @@
   <section id="tab-products" class="hidden">
     <div class="card">
       <h2>Your products</h2>
-      <p class="muted" style="margin-top:0">Saved products show up as suggestions when you type in a bill, with their price filled in.</p>
-      <div class="row">
-        <input id="pName" placeholder="Product name, e.g. Fossil-style Chrono Watch" style="flex:2;min-width:200px" />
-        <input id="pPrice" type="number" min="0" step="0.01" placeholder="Price ₹" style="flex:1;min-width:110px" />
-        <button class="primary" id="pAdd">Add</button>
+      <p class="muted" style="margin-top:0">Saved products fill in their price, HSN and GST automatically when you pick them on a bill.</p>
+      <div class="grid">
+        <label>Product name<input id="pName" placeholder="e.g. Chronograph Watch – Black" /></label>
+        <label>Price ₹<input id="pPrice" type="number" min="0" step="0.01" /></label>
+        <label>HSN code<input id="pHsn" inputmode="numeric" placeholder="e.g. 9102" /></label>
+        <label>GST %<select id="pGst"></select></label>
       </div>
+      <div class="row end" style="margin-top:.75rem"><button class="primary" id="pAdd">Save product</button></div>
     </div>
-    <div class="card">
-      <table><thead><tr><th>Product</th><th class="num">Price</th><th></th></tr></thead><tbody id="pRows"></tbody></table>
+    <div class="card" style="overflow-x:auto">
+      <table><thead><tr><th>Product</th><th>HSN</th><th class="num">GST</th><th class="num">Price</th><th></th></tr></thead><tbody id="pRows"></tbody></table>
     </div>
   </section>
 
@@ -213,27 +252,61 @@
   <section id="tab-settings" class="hidden">
     <div id="setMsg"></div>
     <div class="card">
-      <h2>Shop details (printed on every bill)</h2>
+      <h2>Business details (printed on every invoice)</h2>
       <div class="grid">
-        <label>Shop name<input id="sName" /></label>
+        <label>Business name<input id="sName" /></label>
         <label>Phone / WhatsApp<input id="sPhone" /></label>
-        <label>Instagram<input id="sInsta" placeholder="@yourpage" /></label>
-        <label>Email / Website<input id="sWeb" /></label>
-        <label>GSTIN (optional)<input id="sGst" /></label>
-        <label>UPI ID (optional)<input id="sUpi" placeholder="name@upi" /></label>
-        <label>Bill number prefix<input id="sPrefix" /></label>
+        <label>Email<input id="sEmail" type="email" /></label>
+        <label>Instagram / Website<input id="sInsta" placeholder="@ogaccessories47" /></label>
+        <label>Your state<select id="sState"></select></label>
+        <label>Invoice number prefix<input id="sPrefix" /></label>
       </div>
       <label style="margin-top:.75rem">Address<textarea id="sAddr" rows="2"></textarea></label>
-      <label style="margin-top:.75rem">Thank-you line at the bottom<input id="sFooter" /></label>
-      <div class="row end" style="margin-top:1rem"><button class="primary" id="sSave">Save</button></div>
+      <div class="grid" style="margin-top:.75rem">
+        <div><div class="muted" style="font-size:.86rem;margin-bottom:.3rem">Logo</div>
+          <div class="imgbox"><img id="logoPrev" class="hidden" alt="" /><button id="logoBtn" type="button">Upload logo</button>
+            <button id="logoDel" type="button" class="x hidden" title="Remove">✕</button></div>
+          <input type="file" id="logoFile" accept="image/*" class="hidden" /></div>
+        <div><div class="muted" style="font-size:.86rem;margin-bottom:.3rem">Signature / stamp</div>
+          <div class="imgbox"><img id="signPrev" class="hidden" alt="" /><button id="signBtn" type="button">Upload signature</button>
+            <button id="signDel" type="button" class="x hidden" title="Remove">✕</button></div>
+          <input type="file" id="signFile" accept="image/*" class="hidden" /></div>
+      </div>
     </div>
+
+    <div class="card">
+      <h2>GST</h2>
+      <label class="check"><input type="checkbox" id="sGstOn" /> I am GST registered (show GST on invoices)</label>
+      <div class="grid gst-settings" style="margin-top:.75rem">
+        <label>GSTIN<input id="sGstin" maxlength="15" placeholder="03XXXXX0000X1Z5" /></label>
+        <label>My prices are
+          <select id="sInclusive"><option value="1">Including GST (MRP style)</option><option value="0">Before GST (GST added on top)</option></select>
+        </label>
+      </div>
+      <p class="muted" style="font-size:.85rem;margin-bottom:0">Same state as you → CGST + SGST. Other state → IGST. Shipping is taxed at the rate of the main item on the bill. Please confirm HSN codes and GST rates with your CA.</p>
+    </div>
+
+    <div class="card">
+      <h2>Payment details &amp; terms</h2>
+      <div class="grid">
+        <label>UPI ID<input id="sUpi" placeholder="name@okaxis" /></label>
+        <label>Bank name<input id="sBank" /></label>
+        <label>Account number<input id="sAcc" /></label>
+        <label>IFSC<input id="sIfsc" /></label>
+      </div>
+      <label class="check" style="margin-top:.75rem"><input type="checkbox" id="sRound" /> Round off total to nearest rupee</label>
+      <label style="margin-top:.75rem">Terms &amp; conditions (one per line)<textarea id="sTerms" rows="4"></textarea></label>
+      <label style="margin-top:.75rem">Thank-you line<input id="sFooter" /></label>
+      <div class="row end" style="margin-top:1rem"><button class="primary" id="sSave">Save settings</button></div>
+    </div>
+
     <div class="card">
       <h2>Backup</h2>
-      <p class="muted" style="margin-top:0">Your bills are saved only in this browser on this computer. Download a backup now and then, so you never lose them (for example if browser history is cleared).</p>
+      <p class="muted" style="margin-top:0">Bills are saved only on this phone/computer. Download a backup every week so you never lose them.</p>
       <div class="row">
         <button id="exportBtn">Download backup</button>
-        <label class="row" style="flex-direction:row"><button id="importBtn" type="button">Restore from backup…</button>
-          <input type="file" id="importFile" accept="application/json" class="hidden" /></label>
+        <button id="importBtn" type="button">Restore from backup…</button>
+        <input type="file" id="importFile" accept="application/json,.json" class="hidden" />
       </div>
     </div>
   </section>
@@ -244,40 +317,131 @@
   "use strict";
   const KEY = "og_billing_v1";
   const $ = id => document.getElementById(id);
+  const GST_RATES = [0, 3, 5, 12, 18, 28];
+  const STATES = [
+    ["01","Jammu & Kashmir"],["02","Himachal Pradesh"],["03","Punjab"],["04","Chandigarh"],["05","Uttarakhand"],
+    ["06","Haryana"],["07","Delhi"],["08","Rajasthan"],["09","Uttar Pradesh"],["10","Bihar"],["11","Sikkim"],
+    ["12","Arunachal Pradesh"],["13","Nagaland"],["14","Manipur"],["15","Mizoram"],["16","Tripura"],["17","Meghalaya"],
+    ["18","Assam"],["19","West Bengal"],["20","Jharkhand"],["21","Odisha"],["22","Chhattisgarh"],["23","Madhya Pradesh"],
+    ["24","Gujarat"],["26","Dadra & Nagar Haveli and Daman & Diu"],["27","Maharashtra"],["29","Karnataka"],["30","Goa"],
+    ["31","Lakshadweep"],["32","Kerala"],["33","Tamil Nadu"],["34","Puducherry"],["35","Andaman & Nicobar"],
+    ["36","Telangana"],["37","Andhra Pradesh"],["38","Ladakh"],
+  ];
+  const stateName = code => (STATES.find(s => s[0] === code) || [, ""])[1];
 
   // ---------- storage ----------
-  const DEFAULT = {
-    settings: {
-      name: "OG Accessories", phone: "", insta: "", web: "", gst: "", upi: "", prefix: "OG-",
-      addr: "", footer: "Thank you for shopping with us! 🖤",
-    },
-    nextNo: 1,
-    bills: [],
-    products: [
-      { name: "Watch", price: 0 }, { name: "Wallet", price: 0 }, { name: "Sunglasses / Shades", price: 0 },
-      { name: "Perfume", price: 0 }, { name: "Cap", price: 0 }, { name: "Hat", price: 0 },
-      { name: "Belt", price: 0 }, { name: "Side bag", price: 0 }, { name: "Handbag", price: 0 },
-    ],
+  const DEFAULT_SETTINGS = {
+    name: "OG Accessories", phone: "", email: "", insta: "", addr: "", state: "03", prefix: "OG-",
+    gstOn: false, gstin: "", inclusive: true, roundOff: true,
+    upi: "", bank: "", acc: "", ifsc: "", logo: "", sign: "",
+    terms: "Goods once sold can be exchanged within 7 days with original tags and packing.\nNo cash refunds.\nSubject to Zira, Punjab jurisdiction.",
+    footer: "Thank you for shopping with OG Accessories! 🖤",
   };
+  // Typical HSN codes for accessories. Rates are a starting point; confirm with a CA.
+  const DEFAULT_PRODUCTS = [
+    { name: "Watch", price: 0, hsn: "9102", gst: 18 },
+    { name: "Wallet", price: 0, hsn: "4202", gst: 18 },
+    { name: "Sunglasses / Shades", price: 0, hsn: "9004", gst: 18 },
+    { name: "Perfume", price: 0, hsn: "3303", gst: 18 },
+    { name: "Cap", price: 0, hsn: "6505", gst: 5 },
+    { name: "Hat", price: 0, hsn: "6505", gst: 5 },
+    { name: "Belt", price: 0, hsn: "4203", gst: 18 },
+    { name: "Side bag", price: 0, hsn: "4202", gst: 18 },
+    { name: "Handbag", price: 0, hsn: "4202", gst: 18 },
+  ];
   let db, storageOk = true;
-  try { db = JSON.parse(localStorage.getItem(KEY)) || structuredClone(DEFAULT); }
-  catch { db = structuredClone(DEFAULT); storageOk = false; }
-  db.settings = { ...DEFAULT.settings, ...db.settings };
+  try { db = JSON.parse(localStorage.getItem(KEY)); } catch { storageOk = false; }
+  if (!db) db = { nextNo: 1, bills: [], products: structuredClone(DEFAULT_PRODUCTS) };
+  db.settings = { ...DEFAULT_SETTINGS, ...(db.settings || {}) };
+  // Version 1 products had only name + price: give them HSN/GST from the defaults when names match.
+  db.products = (db.products || []).map(p => {
+    const d = DEFAULT_PRODUCTS.find(d => d.name.toLowerCase() === p.name.toLowerCase());
+    return { hsn: d ? d.hsn : "", gst: d ? d.gst : 18, ...p };
+  });
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
     catch { storageOk = false; return false; }
   }
 
-  // ---------- money: kept in paise (whole numbers) so totals never drift ----------
+  // ---------- money (whole paise, so totals never drift) ----------
   const toPaise = v => Math.round((parseFloat(v) || 0) * 100);
   const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" });
   const money = p => inr.format(p / 100);
+  const plain = p => (p / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const fmtDate = iso => new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  const fmtDate = iso => new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  const fmtTime = iso => new Date(iso).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
 
-  function totals(b) {
-    const sub = b.items.reduce((s, i) => s + Math.round(i.qty * i.price), 0);
-    return { sub, total: Math.max(0, sub - b.discount + b.shipping) };
+  function inWords(paise) {
+    const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve",
+      "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    const two = n => n < 20 ? ones[n] : tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+    const three = n => (n >= 100 ? ones[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " : "") : "") + (n % 100 ? two(n % 100) : "");
+    const indian = n => {
+      if (n === 0) return "Zero";
+      const parts = [];
+      const crore = Math.floor(n / 1e7); n %= 1e7;
+      const lakh = Math.floor(n / 1e5); n %= 1e5;
+      const thousand = Math.floor(n / 1e3); n %= 1e3;
+      if (crore) parts.push(indian(crore) + " Crore");
+      if (lakh) parts.push(two(lakh) + " Lakh");
+      if (thousand) parts.push(two(thousand) + " Thousand");
+      if (n) parts.push(three(n));
+      return parts.join(" ");
+    };
+    const r = Math.floor(paise / 100), p = paise % 100;
+    return "Rupees " + indian(r) + (p ? " and " + two(p) + " Paise" : "") + " Only";
+  }
+
+  // ---------- tax maths ----------
+  // A bill keeps a copy of the tax settings it was made with (bill.tax), so changing
+  // settings later never changes an old invoice.
+  function taxSnapshot() {
+    const s = db.settings;
+    return { gstOn: !!s.gstOn, inclusive: !!s.inclusive, roundOff: !!s.roundOff, sellerState: s.state };
+  }
+  function calc(b) {
+    const t = b.tax || { gstOn: false, inclusive: true, roundOff: false, sellerState: db.settings.state };
+    const rateOf = r => (t.gstOn ? Number(r) || 0 : 0);
+    const lines = b.items.map(i => ({ ...i, gross: Math.round(i.qty * i.price), rate: rateOf(i.gst) }));
+    const gross = lines.reduce((s, l) => s + l.gross, 0);
+    // spread the discount over the lines by value; the last line takes the rounding remainder
+    let given = 0;
+    lines.forEach((l, n) => {
+      const share = n === lines.length - 1 ? b.discount - given : (gross ? Math.round(b.discount * l.gross / gross) : 0);
+      given += share;
+      l.net = l.gross - share;
+    });
+    // shipping follows the main (highest value) item's rate
+    const principal = lines.reduce((a, l) => (l.gross > (a?.gross ?? -1) ? l : a), null);
+    if (b.shipping) lines.push({ name: "Shipping & handling", hsn: "9965", qty: 1, gross: b.shipping, net: b.shipping,
+                                 rate: principal ? principal.rate : 0, isShipping: true });
+    for (const l of lines) {
+      if (t.inclusive) { l.taxable = Math.round(l.net * 100 / (100 + l.rate)); l.tax = l.net - l.taxable; }
+      else { l.taxable = l.net; l.tax = Math.round(l.net * l.rate / 100); }
+      l.amount = l.taxable + l.tax;
+    }
+    const interstate = t.gstOn && b.customer.state && b.customer.state !== t.sellerState;
+    const groups = {};
+    for (const l of lines) {
+      if (!t.gstOn) break;
+      const k = (l.hsn || "—") + "|" + l.rate;
+      const g = groups[k] || (groups[k] = { hsn: l.hsn || "—", rate: l.rate, taxable: 0, tax: 0 });
+      g.taxable += l.taxable; g.tax += l.tax;
+    }
+    const taxRows = Object.values(groups).map(g => {
+      const cgst = interstate ? 0 : Math.floor(g.tax / 2);
+      return { ...g, igst: interstate ? g.tax : 0, cgst, sgst: interstate ? 0 : g.tax - cgst };
+    }).sort((a, b) => a.rate - b.rate || a.hsn.localeCompare(b.hsn));
+    const sum = k => taxRows.reduce((s, r) => s + r[k], 0);
+    const itemsGross = lines.filter(l => !l.isShipping).reduce((s, l) => s + l.gross, 0);
+    const taxable = lines.reduce((s, l) => s + l.taxable, 0);
+    const tax = lines.reduce((s, l) => s + l.tax, 0);
+    const exact = taxable + tax;
+    const total = t.roundOff ? Math.round(exact / 100) * 100 : exact;
+    return { t, lines, itemsGross, taxable, tax, cgst: sum("cgst"), sgst: sum("sgst"), igst: sum("igst"),
+             interstate, taxRows, exact, roundOff: total - exact, total };
   }
 
   // ---------- tabs ----------
@@ -288,40 +452,61 @@
     if (tab === "history") renderHistory();
     if (tab === "products") renderProducts();
     if (tab === "settings") loadSettings();
+    if (tab === "new") applyGstVisibility();
     window.scrollTo(0, 0);
   }
   document.querySelectorAll("header nav button").forEach(b => b.onclick = () => show(b.dataset.tab));
+  const flash = (el, text, ok) => { $(el).innerHTML = text ? `<div class="msg ${ok ? "ok" : "err"}">${esc(text)}</div>` : ""; };
 
-  function flash(el, text, ok) {
-    $(el).innerHTML = text ? `<div class="msg ${ok ? "ok" : "err"}">${esc(text)}</div>` : "";
+  const stateOptions = STATES.map(([c, n]) => `<option value="${c}">${n} (${c})</option>`).join("");
+  $("cState").innerHTML = `<option value="">— Select state —</option>` + stateOptions;
+  $("sState").innerHTML = stateOptions;
+  const gstOptions = GST_RATES.map(r => `<option value="${r}">${r}%</option>`).join("");
+  $("pGst").innerHTML = gstOptions;
+  $("pGst").value = "18";
+
+  function applyGstVisibility() {
+    const on = db.settings.gstOn;
+    document.querySelectorAll(".gstonly").forEach(el => el.classList.toggle("hidden", !on));
+    $("priceBasisNote").textContent = on ? (db.settings.inclusive ? "Prices include GST" : "GST is added on top of prices") : "";
+    recalc();
   }
 
   // ---------- new bill form ----------
   function refreshCatalog() {
     $("catalog").innerHTML = db.products.map(p => `<option value="${esc(p.name)}"></option>`).join("");
   }
-  function addRow(item = { name: "", qty: 1, price: "" }) {
+  function addRow(item = { name: "", qty: 1, price: "", hsn: "", gst: 18 }) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td><input class="iname" list="catalog" placeholder="Product" value="${esc(item.name)}" /></td>
-      <td class="qty"><input class="iqty" type="number" min="1" step="1" value="${esc(item.qty)}" /></td>
-      <td class="price"><input class="iprice" type="number" min="0" step="0.01" value="${esc(item.price)}" placeholder="0" /></td>
+      <td class="name"><input class="iname" list="catalog" placeholder="Product" value="${esc(item.name)}" /></td>
+      <td class="gstonly"><input class="ihsn w-hsn" inputmode="numeric" placeholder="HSN" value="${esc(item.hsn)}" /></td>
+      <td><input class="iqty w-qty" type="number" min="1" step="1" value="${esc(item.qty)}" /></td>
+      <td><input class="iprice w-price" type="number" min="0" step="0.01" value="${esc(item.price)}" placeholder="Price" /></td>
+      <td class="gstonly"><select class="igst w-gst">${gstOptions}</select></td>
       <td class="num amt">₹0.00</td>
       <td><button class="x" title="Remove">✕</button></td>`;
-    const name = tr.querySelector(".iname"), price = tr.querySelector(".iprice");
+    tr.querySelector(".igst").value = String(item.gst ?? 18);
+    const name = tr.querySelector(".iname");
     name.addEventListener("change", () => {
       const p = db.products.find(p => p.name.toLowerCase() === name.value.trim().toLowerCase());
-      if (p && p.price && !price.value) price.value = (p.price / 100).toString();
+      if (p) {
+        if (p.price && !tr.querySelector(".iprice").value) tr.querySelector(".iprice").value = p.price / 100;
+        if (p.hsn) tr.querySelector(".ihsn").value = p.hsn;
+        tr.querySelector(".igst").value = String(p.gst ?? 18);
+      }
       recalc();
     });
     tr.querySelector(".x").onclick = () => { tr.remove(); if (!$("itemRows").children.length) addRow(); recalc(); };
-    tr.querySelectorAll("input").forEach(i => i.addEventListener("input", recalc));
+    tr.querySelectorAll("input,select").forEach(i => i.addEventListener("input", recalc));
     $("itemRows").appendChild(tr);
+    if (!db.settings.gstOn) tr.querySelectorAll(".gstonly").forEach(el => el.classList.add("hidden"));
     recalc();
     return tr;
   }
   $("addItem").onclick = () => addRow().querySelector(".iname").focus();
   ["discount", "shipping"].forEach(id => $(id).addEventListener("input", recalc));
+  $("cState").addEventListener("change", recalc);
   $("payMode").addEventListener("change", () => {
     $("payStatus").value = $("payMode").value === "Cash on Delivery" ? "DUE" : "PAID";
   });
@@ -329,40 +514,48 @@
   function readForm() {
     const items = [...$("itemRows").children].map(tr => ({
       name: tr.querySelector(".iname").value.trim(),
+      hsn: tr.querySelector(".ihsn").value.trim(),
       qty: Math.max(0, parseInt(tr.querySelector(".iqty").value, 10) || 0),
       price: toPaise(tr.querySelector(".iprice").value),
+      gst: Number(tr.querySelector(".igst").value),
     })).filter(i => i.name || i.price);
     return {
-      customer: { name: $("cName").value.trim(), phone: $("cPhone").value.trim(), addr: $("cAddr").value.trim() },
+      customer: { name: $("cName").value.trim(), phone: $("cPhone").value.trim(), addr: $("cAddr").value.trim(),
+                  state: $("cState").value, gstin: $("cGstin").value.trim().toUpperCase() },
       orderRef: $("cOrder").value.trim(),
       items, discount: toPaise($("discount").value), shipping: toPaise($("shipping").value),
       payMode: $("payMode").value, payStatus: $("payStatus").value, note: $("note").value.trim(),
     };
   }
   function recalc() {
-    const b = readForm();
+    const b = { ...readForm(), tax: editing?.tax || taxSnapshot() };
     [...$("itemRows").children].forEach(tr => {
       const q = parseInt(tr.querySelector(".iqty").value, 10) || 0;
       tr.querySelector(".amt").textContent = money(Math.round(q * toPaise(tr.querySelector(".iprice").value)));
     });
-    const t = totals(b);
-    $("tSub").textContent = money(t.sub);
-    $("tDisc").textContent = "−" + money(b.discount);
-    $("tShip").textContent = money(b.shipping);
-    $("tDiscRow").classList.toggle("hidden", !b.discount);
-    $("tShipRow").classList.toggle("hidden", !b.shipping);
-    $("tTotal").textContent = money(t.total);
+    const c = calc(b);
+    const rows = [[`Items`, money(c.itemsGross)]];
+    if (b.discount) rows.push(["Discount", "−" + money(b.discount)]);
+    if (b.shipping) rows.push(["Shipping", money(b.shipping)]);
+    if (c.t.gstOn) {
+      rows.push(["Taxable value", money(c.taxable)]);
+      if (c.interstate) rows.push(["IGST", money(c.igst)]);
+      else rows.push(["CGST", money(c.cgst)], ["SGST", money(c.sgst)]);
+    }
+    if (c.roundOff) rows.push(["Round off", (c.roundOff > 0 ? "+" : "−") + money(Math.abs(c.roundOff))]);
+    $("liveTotals").innerHTML = rows.map(([a, v]) => `<div><span>${a}</span><span>${v}</span></div>`).join("") +
+      `<div class="grand"><span>Total</span><span>${money(c.total)}</span></div>`;
   }
   function fillForm(b) {
     $("cName").value = b?.customer.name || ""; $("cPhone").value = b?.customer.phone || "";
     $("cAddr").value = b?.customer.addr || ""; $("cOrder").value = b?.orderRef || "";
+    $("cState").value = b?.customer.state ?? db.settings.state; $("cGstin").value = b?.customer.gstin || "";
     $("discount").value = b?.discount ? b.discount / 100 : ""; $("shipping").value = b?.shipping ? b.shipping / 100 : "";
     $("payMode").value = b?.payMode || "Prepaid (UPI)"; $("payStatus").value = b?.payStatus || "PAID";
     $("note").value = b?.note || "";
     $("itemRows").innerHTML = "";
-    (b?.items.length ? b.items : [{ name: "", qty: 1, price: "" }])
-      .forEach(i => addRow({ name: i.name, qty: i.qty, price: i.price === "" ? "" : i.price / 100 }));
-    $("saveBill").textContent = b ? `Update bill ${b.no}` : "Save & show bill";
+    (b?.items.length ? b.items : [null]).forEach(i => addRow(i ? { ...i, price: i.price / 100 } : undefined));
+    $("saveBill").textContent = b ? `Update ${b.no}` : "Save & show bill";
     recalc();
   }
   $("clearBill").onclick = () => { editing = null; fillForm(null); flash("newMsg", ""); };
@@ -371,102 +564,174 @@
     const f = readForm();
     if (!f.customer.name) return flash("newMsg", "Please enter the customer name.");
     if (!f.items.length) return flash("newMsg", "Please add at least one item.");
-    const bad = f.items.find(i => !i.name || i.qty < 1);
-    if (bad) return flash("newMsg", "Every item needs a name and a quantity of 1 or more.");
-    if (f.discount > totals(f).sub) return flash("newMsg", "Discount is more than the items total.");
+    if (f.items.find(i => !i.name || i.qty < 1)) return flash("newMsg", "Every item needs a name and a quantity of 1 or more.");
+    const gross = f.items.reduce((s, i) => s + Math.round(i.qty * i.price), 0);
+    if (f.discount > gross) return flash("newMsg", "Discount is more than the items total.");
+    if (f.customer.gstin && !/^[0-9]{2}[A-Z0-9]{13}$/.test(f.customer.gstin)) return flash("newMsg", "Customer GSTIN should be 15 characters, e.g. 03ABCDE1234F1Z5.");
     let bill;
     if (editing) {
       bill = Object.assign(editing, f, { updatedAt: new Date().toISOString() });
     } else {
       bill = { id: Date.now().toString(36), no: db.settings.prefix + String(db.nextNo).padStart(4, "0"),
-               date: new Date().toISOString(), ...f };
+               date: new Date().toISOString(), tax: taxSnapshot(), ...f };
       db.nextNo += 1;
       db.bills.unshift(bill);
     }
-    // remember new product names (and their latest price) for next time
     for (const i of f.items) {
       const p = db.products.find(p => p.name.toLowerCase() === i.name.toLowerCase());
-      if (p) { if (i.price) p.price = i.price; } else db.products.push({ name: i.name, price: i.price });
+      if (p) { if (i.price) p.price = i.price; if (i.hsn) p.hsn = i.hsn; p.gst = i.gst; }
+      else db.products.push({ name: i.name, price: i.price, hsn: i.hsn, gst: i.gst });
     }
-    if (!save()) flash("newMsg", "Warning: this browser is not letting the app save. Download a backup in Settings.");
-    else flash("newMsg", "");
+    flash("newMsg", save() ? "" : "Warning: this browser is not letting the app save. Download a backup in Settings.");
     editing = null;
     fillForm(null);
     refreshCatalog();
     openBill(bill.id);
   };
 
-  // ---------- bill view ----------
-  function billHtml(b) {
-    const s = db.settings, t = totals(b);
-    const contact = [s.phone && "📞 " + esc(s.phone), s.insta && "📷 " + esc(s.insta), s.web && esc(s.web)].filter(Boolean).join(" · ");
-    const nameHtml = esc(s.name).replace(/^OG\b/, "OG<span>").replace(/(<span>.*)$/, "$1</span>");
+  // ---------- invoice ----------
+  function invoiceHtml(b) {
+    const s = db.settings, c = calc(b), gst = c.t.gstOn;
+    const title = gst ? "TAX INVOICE" : "INVOICE";
+    const nameHtml = esc(s.name).replace(/^OG\b(.*)$/, "OG<span>$1</span>");
+    const contact = [s.phone && "Ph: " + esc(s.phone), s.email && esc(s.email), s.insta && esc(s.insta)].filter(Boolean).join(" · ");
+    const sellerState = c.t.sellerState || s.state;
+    const pos = b.customer.state ? `${esc(stateName(b.customer.state))} (${b.customer.state})` : `${esc(stateName(sellerState))} (${sellerState})`;
+    // Without GST, shipping shows in the totals box instead of as a table row.
+    const itemLines = gst ? c.lines : c.lines.filter(l => !l.isShipping);
+    const head = gst
+      ? `<tr><th>#</th><th>Item</th><th class="hide-r">HSN</th><th class="num">Qty</th><th class="num">Rate</th>
+           <th class="num hide-r">Taxable</th><th class="num hide-r">GST</th><th class="num">Amount</th></tr>`
+      : `<tr><th>#</th><th>Item</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr>`;
+    const body = itemLines.map((l, n) => gst
+      ? `<tr><td>${n + 1}</td><td>${esc(l.name)}</td><td class="hide-r">${esc(l.hsn || "")}</td><td class="num">${l.qty}</td>
+           <td class="num">${plain(l.isShipping ? l.gross : l.price)}</td><td class="num hide-r">${plain(l.taxable)}</td>
+           <td class="num hide-r">${l.rate}%<br><span class="small">${plain(l.tax)}</span></td><td class="num">${plain(l.amount)}</td></tr>`
+      : `<tr><td>${n + 1}</td><td>${esc(l.name)}</td><td class="num">${l.qty}</td>
+           <td class="num">${plain(l.price)}</td><td class="num">${plain(l.gross)}</td></tr>`
+    ).join("");
+    const taxTable = gst && c.taxRows.length ? `
+      <table class="tax hide-r" style="margin-top:10px">
+        <thead><tr><th>HSN</th><th class="num">Taxable</th><th class="num">Rate</th>
+          ${c.interstate ? `<th class="num">IGST</th>` : `<th class="num">CGST</th><th class="num">SGST</th>`}<th class="num">Total tax</th></tr></thead>
+        <tbody>${c.taxRows.map(r => `<tr><td>${esc(r.hsn)}</td><td class="num">${plain(r.taxable)}</td><td class="num">${r.rate}%</td>
+          ${c.interstate ? `<td class="num">${plain(r.igst)}</td>` : `<td class="num">${plain(r.cgst)}</td><td class="num">${plain(r.sgst)}</td>`}
+          <td class="num">${plain(r.tax)}</td></tr>`).join("")}</tbody>
+      </table>` : "";
+    const tot = [];
+    if (gst) {
+      if (b.discount) tot.push(["Discount (incl. in rates)", "−" + plain(b.discount)]);
+      tot.push(["Taxable value", plain(c.taxable)]);
+      if (c.interstate) tot.push(["IGST", plain(c.igst)]);
+      else tot.push(["CGST", plain(c.cgst)], ["SGST", plain(c.sgst)]);
+    } else {
+      tot.push(["Items total", plain(c.itemsGross)]);
+      if (b.discount) tot.push(["Discount", "−" + plain(b.discount)]);
+      if (b.shipping) tot.push(["Shipping", plain(b.shipping)]);
+    }
+    if (c.roundOff) tot.push(["Round off", (c.roundOff > 0 ? "+" : "−") + plain(Math.abs(c.roundOff))]);
+    const pay = [];
+    if (s.upi) pay.push(`UPI: <b>${esc(s.upi)}</b>`);
+    if (s.bank || s.acc) pay.push(`${esc(s.bank)}${s.acc ? " · A/c " + esc(s.acc) : ""}${s.ifsc ? " · IFSC " + esc(s.ifsc) : ""}`);
     return `
-      <div class="bill ${$("receiptMode").checked ? "receipt" : ""}">
-        <div class="head">
+    <div class="inv ${$("receiptMode").checked ? "receipt" : ""}">
+      <div class="top">
+        <div class="brand">
+          ${s.logo ? `<img src="${s.logo}" alt="">` : ""}
           <div>
             <div class="shop">${nameHtml}</div>
-            <div class="small">${esc(s.addr).replace(/\n/g, "<br>")}${s.addr ? "<br>" : ""}${contact}${s.gst ? "<br>GSTIN: " + esc(s.gst) : ""}</div>
-          </div>
-          <div class="title">
-            <b>INVOICE</b>
-            <div class="small">Bill No: <b>${esc(b.no)}</b><br>${fmtDate(b.date)}${b.orderRef ? "<br>Order: " + esc(b.orderRef) : ""}</div>
+            <div class="small">${esc(s.addr).replace(/\n/g, "<br>")}${s.addr ? "<br>" : ""}${contact}
+              ${gst && s.gstin ? `<br><b>GSTIN: ${esc(s.gstin)}</b>` : ""}${gst ? ` · State: ${esc(stateName(sellerState))} (${sellerState})` : ""}</div>
           </div>
         </div>
-        <div class="to">
-          <div class="small"><b>Bill to:</b><br>${esc(b.customer.name)}${b.customer.phone ? "<br>" + esc(b.customer.phone) : ""}${b.customer.addr ? "<br>" + esc(b.customer.addr).replace(/\n/g, "<br>") : ""}</div>
-          <div class="small" style="text-align:right"><b>Payment:</b><br>${esc(b.payMode)}<br>
-            <span class="status ${b.payStatus === "PAID" ? "paid" : "cod"}">${b.payStatus === "PAID" ? "PAID" : "AMOUNT DUE"}</span></div>
+        <div class="doc">
+          <div class="t">${title}</div>
+          <div class="orig">ORIGINAL FOR RECIPIENT</div>
+          <div style="margin-top:6px"><span class="stamp ${b.payStatus === "PAID" ? "paid" : "due"}">${b.payStatus === "PAID" ? "PAID" : "PAYMENT DUE"}</span></div>
         </div>
-        <table>
-          <thead><tr><th>#</th><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Amount</th></tr></thead>
-          <tbody>${b.items.map((i, n) => `<tr><td>${n + 1}</td><td>${esc(i.name)}</td><td class="num">${i.qty}</td>
-            <td class="num">${money(i.price)}</td><td class="num">${money(Math.round(i.qty * i.price))}</td></tr>`).join("")}</tbody>
-        </table>
-        <div class="totals" style="margin-top:.75rem">
-          <div><span>Subtotal</span><span>${money(t.sub)}</span></div>
-          ${b.discount ? `<div><span>Discount</span><span>−${money(b.discount)}</span></div>` : ""}
-          ${b.shipping ? `<div><span>Shipping</span><span>${money(b.shipping)}</span></div>` : ""}
-          <div class="grand"><span>Total</span><span>${money(t.total)}</span></div>
+      </div>
+      <div class="bar"></div>
+      <div class="meta">
+        <div><div class="lbl">Invoice No.</div><b>${esc(b.no)}</b></div>
+        <div><div class="lbl">Invoice Date</div>${fmtDate(b.date)} <span class="small">${fmtTime(b.date)}</span></div>
+        <div><div class="lbl">${b.orderRef ? "Order Ref." : "Place of Supply"}</div>${b.orderRef ? esc(b.orderRef) : pos}</div>
+      </div>
+      <div class="parties">
+        <div><div class="lbl">Bill to / Ship to</div>
+          <b>${esc(b.customer.name)}</b>${b.customer.phone ? "<br>" + esc(b.customer.phone) : ""}
+          ${b.customer.addr ? "<br>" + esc(b.customer.addr).replace(/\n/g, "<br>") : ""}
+          ${b.customer.state ? "<br>" + esc(stateName(b.customer.state)) : ""}
+          ${b.customer.gstin ? `<br>GSTIN: <b>${esc(b.customer.gstin)}</b>` : ""}</div>
+        <div><div class="lbl">Payment</div>${esc(b.payMode)}
+          ${gst ? `<div class="lbl" style="margin-top:6px">Place of Supply</div>${pos}
+                   <div class="small">${c.interstate ? "Inter-state supply (IGST)" : "Intra-state supply (CGST + SGST)"}</div>` : ""}</div>
+      </div>
+      <div class="tablewrap"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>
+      <div class="sum">
+        <div>${taxTable}
+          <div class="words"><span class="lbl">Amount in words</span><br><b>${inWords(c.total)}</b></div>
         </div>
-        ${b.payStatus !== "PAID" && s.upi ? `<p class="small" style="margin-top:.8rem">Pay by UPI: <b>${esc(s.upi)}</b></p>` : ""}
-        ${b.note ? `<p class="small"><b>Note:</b> ${esc(b.note)}</p>` : ""}
-        <div class="foot">${esc(s.footer)}</div>
-      </div>`;
+        <div class="tot">
+          ${tot.map(([a, v]) => `<div><span>${a}</span><span>${v}</span></div>`).join("")}
+          <div class="grand"><span>Grand Total</span><span>${money(c.total)}</span></div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="small">
+          ${pay.length ? `<div class="lbl">Payment details</div>${pay.join("<br>")}` : ""}
+          ${b.note ? `<div class="lbl" style="margin-top:8px">Note</div>${esc(b.note)}` : ""}
+          ${s.terms ? `<div class="lbl" style="margin-top:8px">Terms &amp; Conditions</div><div class="terms">${esc(s.terms)}</div>` : ""}
+        </div>
+        <div class="sign small">
+          For <b>${esc(s.name)}</b>
+          ${s.sign ? `<img src="${s.sign}" alt="">` : `<div style="height:48px"></div>`}
+          <span class="line">Authorised Signatory</span>
+        </div>
+      </div>
+      <div class="foot">${esc(s.footer)}<br>This is a computer-generated invoice.</div>
+    </div>`;
   }
   function openBill(id) {
     viewing = db.bills.find(b => b.id === id);
     if (!viewing) return;
-    $("billBox").innerHTML = billHtml(viewing);
+    $("billBox").innerHTML = invoiceHtml(viewing);
     for (const s of document.querySelectorAll("main > section")) s.classList.toggle("hidden", s.id !== "tab-view");
+    for (const b of document.querySelectorAll("header nav button")) b.classList.toggle("on", b.dataset.tab === "history");
     window.scrollTo(0, 0);
   }
-  $("receiptMode").onchange = () => viewing && ($("billBox").innerHTML = billHtml(viewing));
-  $("printBtn").onclick = () => window.print();
+  $("receiptMode").onchange = () => viewing && ($("billBox").innerHTML = invoiceHtml(viewing));
+  $("printBtn").onclick = () => {
+    const old = document.title;
+    document.title = `${viewing.no} ${viewing.customer.name}`;  // becomes the PDF file name
+    window.print();
+    setTimeout(() => (document.title = old), 500);
+  };
   $("backBtn").onclick = () => show("history");
-  $("editBtn").onclick = () => { editing = viewing; fillForm(viewing); show("new"); };
+  $("editBtn").onclick = () => { editing = viewing; show("new"); fillForm(viewing); };
   $("delBtn").onclick = () => {
-    if (!confirm(`Delete bill ${viewing.no}? This cannot be undone.`)) return;
+    if (!confirm(`Delete invoice ${viewing.no}? This cannot be undone.`)) return;
     db.bills = db.bills.filter(b => b !== viewing);
     save();
     show("history");
   };
   $("waBtn").onclick = () => {
-    const b = viewing, s = db.settings, t = totals(b);
-    const lines = [`*${s.name}*`, `Invoice ${b.no} · ${fmtDate(b.date)}`, "", `Hi ${b.customer.name}, here is your bill:`, ""];
-    b.items.forEach(i => lines.push(`• ${i.name} × ${i.qty} = ${money(Math.round(i.qty * i.price))}`));
-    lines.push("");
-    if (b.discount) lines.push(`Discount: −${money(b.discount)}`);
-    if (b.shipping) lines.push(`Shipping: ${money(b.shipping)}`);
-    lines.push(`*Total: ${money(t.total)}*`);
-    lines.push(`Payment: ${b.payMode} (${b.payStatus === "PAID" ? "Paid ✅" : "Due"})`);
-    if (b.payStatus !== "PAID" && s.upi) lines.push(`UPI: ${s.upi}`);
-    if (b.note) lines.push(`Note: ${b.note}`);
-    lines.push("", s.footer);
-    if (s.insta) lines.push(`Follow us: ${s.insta}`);
+    const b = viewing, s = db.settings, c = calc(b);
+    const L = [`*${s.name}*`, `${c.t.gstOn ? "Tax Invoice" : "Invoice"} *${b.no}* · ${fmtDate(b.date)}`, "",
+               `Dear ${b.customer.name}, thank you for your order!`, ""];
+    b.items.forEach(i => L.push(`• ${i.name} × ${i.qty} — ${money(Math.round(i.qty * i.price))}`));
+    L.push("");
+    if (b.discount) L.push(`Discount: −${money(b.discount)}`);
+    if (b.shipping) L.push(`Shipping: ${money(b.shipping)}`);
+    if (c.t.gstOn) L.push(c.interstate ? `IGST: ${money(c.igst)}` : `CGST: ${money(c.cgst)} · SGST: ${money(c.sgst)}`);
+    L.push(`*Grand Total: ${money(c.total)}*`);
+    L.push(`Payment: ${b.payMode} — ${b.payStatus === "PAID" ? "Paid ✅" : "Due"}`);
+    if (b.payStatus !== "PAID" && s.upi) L.push(`Pay via UPI: ${s.upi}`);
+    if (b.note) L.push(`Note: ${b.note}`);
+    L.push("", s.footer);
+    if (s.insta) L.push(s.insta);
     const digits = (b.customer.phone || "").replace(/\D/g, "");
     const to = digits.length === 10 ? "91" + digits : digits;
-    window.open(`https://wa.me/${to}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener");
+    window.open(`https://wa.me/${to}?text=${encodeURIComponent(L.join("\n"))}`, "_blank", "noopener");
   };
 
   // ---------- history ----------
@@ -474,21 +739,25 @@
     const months = [...new Set(db.bills.map(b => b.date.slice(0, 7)))];
     const cur = $("hMonth").value;
     $("hMonth").innerHTML = `<option value="">All months</option>` + months.map(m =>
-      `<option value="${m}">${new Date(m + "-01").toLocaleString("en-IN", { month: "long", year: "numeric" })}</option>`).join("");
+      `<option value="${m}">${new Date(m + "-01T00:00").toLocaleString("en-IN", { month: "long", year: "numeric" })}</option>`).join("");
     if (months.includes(cur)) $("hMonth").value = cur;
     const q = $("hSearch").value.trim().toLowerCase(), m = $("hMonth").value;
     const list = db.bills.filter(b => (!m || b.date.startsWith(m)) &&
       (!q || [b.no, b.customer.name, b.customer.phone, b.orderRef].join(" ").toLowerCase().includes(q)));
-    const sum = list.reduce((s, b) => s + totals(b).total, 0);
-    const due = list.filter(b => b.payStatus !== "PAID").reduce((s, b) => s + totals(b).total, 0);
-    $("hSummary").innerHTML = `${list.length} bills · Total <b style="color:var(--text)">&nbsp;${money(sum)}</b>${due ? ` · Due/COD ${money(due)}` : ""}`;
+    const calcs = new Map(list.map(b => [b, calc(b)]));
+    const sum = list.reduce((s, b) => s + calcs.get(b).total, 0);
+    const tax = list.reduce((s, b) => s + calcs.get(b).tax, 0);
+    const due = list.filter(b => b.payStatus !== "PAID").reduce((s, b) => s + calcs.get(b).total, 0);
+    $("hSummary").innerHTML = `${list.length} invoices · Sales <b style="color:var(--text)">&nbsp;${money(sum)}</b>` +
+      (tax ? ` · GST ${money(tax)}` : "") + (due ? ` · Due/COD ${money(due)}` : "");
     $("hRows").innerHTML = list.length ? list.map(b => `
       <tr class="click" data-id="${b.id}">
         <td><b>${esc(b.no)}</b></td><td>${fmtDate(b.date)}</td>
         <td>${esc(b.customer.name)}<div class="muted" style="font-size:.8rem">${esc(b.customer.phone)}</div></td>
-        <td><span class="badge ${b.payStatus === "PAID" ? "paid" : "due"}">${b.payStatus === "PAID" ? "Paid" : "Due"}</span> <span class="muted" style="font-size:.8rem">${esc(b.payMode)}</span></td>
-        <td class="num">${money(totals(b).total)}</td>
-      </tr>`).join("") : `<tr><td colspan="5" class="muted">No bills yet.</td></tr>`;
+        <td><span class="badge ${b.payStatus === "PAID" ? "paid" : "due"}">${b.payStatus === "PAID" ? "Paid" : "Due"}</span>
+          <div class="muted" style="font-size:.8rem">${esc(b.payMode)}</div></td>
+        <td class="num">${money(calcs.get(b).total)}</td>
+      </tr>`).join("") : `<tr><td colspan="5" class="muted">No invoices yet.</td></tr>`;
     document.querySelectorAll("#hRows tr.click").forEach(tr => tr.onclick = () => openBill(tr.dataset.id));
   }
   $("hSearch").oninput = renderHistory;
@@ -497,12 +766,15 @@
   // ---------- products ----------
   function renderProducts() {
     $("pRows").innerHTML = db.products.length ? db.products.map((p, i) => `
-      <tr><td>${esc(p.name)}</td>
-        <td class="num"><input type="number" min="0" step="0.01" data-i="${i}" value="${p.price ? p.price / 100 : ""}" placeholder="—" style="width:110px;text-align:right" /></td>
+      <tr class="click" data-i="${i}"><td>${esc(p.name)}</td><td>${esc(p.hsn || "—")}</td><td class="num">${p.gst ?? 0}%</td>
+        <td class="num">${p.price ? money(p.price) : "—"}</td>
         <td class="num"><button class="x" data-del="${i}" title="Remove">✕</button></td></tr>`).join("")
-      : `<tr><td colspan="3" class="muted">No products yet.</td></tr>`;
-    document.querySelectorAll("#pRows input").forEach(inp => inp.onchange = () => {
-      db.products[inp.dataset.i].price = toPaise(inp.value); save(); refreshCatalog();
+      : `<tr><td colspan="5" class="muted">No products yet.</td></tr>`;
+    document.querySelectorAll("#pRows tr.click").forEach(tr => tr.onclick = e => {
+      if (e.target.dataset.del !== undefined) return;
+      const p = db.products[tr.dataset.i];
+      $("pName").value = p.name; $("pPrice").value = p.price ? p.price / 100 : ""; $("pHsn").value = p.hsn || "";
+      $("pGst").value = String(p.gst ?? 18); $("pName").focus(); window.scrollTo(0, 0);
     });
     document.querySelectorAll("#pRows [data-del]").forEach(btn => btn.onclick = () => {
       db.products.splice(btn.dataset.del, 1); save(); refreshCatalog(); renderProducts();
@@ -511,27 +783,80 @@
   $("pAdd").onclick = () => {
     const name = $("pName").value.trim();
     if (!name) return;
-    const existing = db.products.find(p => p.name.toLowerCase() === name.toLowerCase());
-    if (existing) existing.price = toPaise($("pPrice").value);
-    else db.products.push({ name, price: toPaise($("pPrice").value) });
+    const data = { name, price: toPaise($("pPrice").value), hsn: $("pHsn").value.trim(), gst: Number($("pGst").value) };
+    const i = db.products.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+    if (i >= 0) db.products[i] = data; else db.products.push(data);
     db.products.sort((a, b) => a.name.localeCompare(b.name));
     save(); refreshCatalog(); renderProducts();
-    $("pName").value = ""; $("pPrice").value = ""; $("pName").focus();
+    $("pName").value = ""; $("pPrice").value = ""; $("pHsn").value = ""; $("pName").focus();
   };
 
-  // ---------- settings & backup ----------
-  const SET = { sName: "name", sPhone: "phone", sInsta: "insta", sWeb: "web", sGst: "gst", sUpi: "upi", sPrefix: "prefix", sAddr: "addr", sFooter: "footer" };
-  function loadSettings() { for (const [id, k] of Object.entries(SET)) $(id).value = db.settings[k] || ""; }
+  // ---------- settings ----------
+  const TEXT = { sName: "name", sPhone: "phone", sEmail: "email", sInsta: "insta", sAddr: "addr", sState: "state",
+                 sPrefix: "prefix", sGstin: "gstin", sUpi: "upi", sBank: "bank", sAcc: "acc", sIfsc: "ifsc",
+                 sTerms: "terms", sFooter: "footer" };
+  let pendingImgs = {};
+  function loadSettings() {
+    const s = db.settings;
+    for (const [id, k] of Object.entries(TEXT)) $(id).value = s[k] || "";
+    $("sGstOn").checked = s.gstOn; $("sInclusive").value = s.inclusive ? "1" : "0"; $("sRound").checked = s.roundOff;
+    pendingImgs = { logo: s.logo, sign: s.sign };
+    showImg("logo"); showImg("sign");
+    toggleGstSettings();
+  }
+  function toggleGstSettings() { document.querySelector(".gst-settings").classList.toggle("hidden", !$("sGstOn").checked); }
+  $("sGstOn").onchange = toggleGstSettings;
+  function showImg(k) {
+    const prev = $(k + "Prev"), del = $(k + "Del");
+    prev.src = pendingImgs[k] || ""; prev.classList.toggle("hidden", !pendingImgs[k]); del.classList.toggle("hidden", !pendingImgs[k]);
+  }
+  // Shrink uploaded images so they fit comfortably in browser storage.
+  function loadImage(file, maxW, maxH) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const r = Math.min(1, maxW / img.width, maxH / img.height);
+        const cv = Object.assign(document.createElement("canvas"), { width: Math.round(img.width * r), height: Math.round(img.height * r) });
+        cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+        URL.revokeObjectURL(img.src);
+        resolve(cv.toDataURL("image/png"));
+      };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  for (const k of ["logo", "sign"]) {
+    $(k + "Btn").onclick = () => $(k + "File").click();
+    $(k + "Del").onclick = () => { pendingImgs[k] = ""; showImg(k); };
+    $(k + "File").onchange = async e => {
+      const f = e.target.files[0];
+      if (!f) return;
+      try { pendingImgs[k] = await loadImage(f, k === "logo" ? 300 : 360, 150); showImg(k); flash("setMsg", "Image added. Press Save settings to keep it.", true); }
+      catch { flash("setMsg", "Could not read that image."); }
+      e.target.value = "";
+    };
+  }
   $("sSave").onclick = () => {
-    for (const [id, k] of Object.entries(SET)) db.settings[k] = $(id).value.trim();
-    if (!db.settings.name) db.settings.name = "OG Accessories";
-    save(); setTopName();
-    flash("setMsg", "Saved. New details will show on every bill.", true);
+    const s = db.settings;
+    for (const [id, k] of Object.entries(TEXT)) s[k] = $(id).value.trim();
+    s.gstin = s.gstin.toUpperCase(); s.ifsc = s.ifsc.toUpperCase();
+    if (!s.name) s.name = "OG Accessories";
+    if (!s.prefix) s.prefix = "OG-";
+    s.gstOn = $("sGstOn").checked; s.inclusive = $("sInclusive").value === "1"; s.roundOff = $("sRound").checked;
+    s.logo = pendingImgs.logo || ""; s.sign = pendingImgs.sign || "";
+    if (s.gstOn && s.gstin && !/^[0-9]{2}[A-Z0-9]{13}$/.test(s.gstin)) return flash("setMsg", "GSTIN should be 15 characters, e.g. 03ABCDE1234F1Z5.");
+    if (s.gstOn && s.gstin && s.gstin.slice(0, 2) !== s.state) flash("setMsg", "Saved. Note: your GSTIN starts with " + s.gstin.slice(0, 2) + " but your state is " + s.state + ". Please check.", false);
+    else flash("setMsg", "Saved. New invoices will use these details.", true);
+    if (!save()) flash("setMsg", "Could not save — storage is full or blocked. Try a smaller logo.");
+    setTopName();
+    applyGstVisibility();
   };
   function setTopName() {
     $("topName").innerHTML = esc(db.settings.name).replace(/^OG\b(.*)$/, "OG<span>$1</span>");
     document.title = db.settings.name + " Billing";
   }
+
+  // ---------- backup ----------
   $("exportBtn").onclick = () => {
     const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
     const a = Object.assign(document.createElement("a"), {
@@ -547,10 +872,10 @@
     try {
       const data = JSON.parse(await file.text());
       if (!Array.isArray(data.bills) || !data.settings) throw new Error("not a backup");
-      if (!confirm(`Restore ${data.bills.length} bills from this backup? It replaces what is here now.`)) return;
-      db = { ...structuredClone(DEFAULT), ...data, settings: { ...DEFAULT.settings, ...data.settings } };
-      save(); setTopName(); refreshCatalog(); loadSettings();
-      flash("setMsg", `Restored ${db.bills.length} bills.`, true);
+      if (!confirm(`Restore ${data.bills.length} invoices from this backup? It replaces what is here now.`)) return;
+      db = { nextNo: 1, products: [], ...data, settings: { ...DEFAULT_SETTINGS, ...data.settings } };
+      save(); setTopName(); refreshCatalog(); loadSettings(); applyGstVisibility();
+      flash("setMsg", `Restored ${db.bills.length} invoices.`, true);
     } catch {
       flash("setMsg", "That file is not a valid backup.");
     }
@@ -561,15 +886,15 @@
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
-  // Ask the browser to keep our data even when the phone is low on space.
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 
   // ---------- start ----------
   setTopName();
   refreshCatalog();
   fillForm(null);
-  if (!storageOk) flash("newMsg", "This browser is blocking saving (private window?). Bills will be lost when you close it.");
-  else if (!db.settings.phone && !db.bills.length) flash("newMsg", "Tip: open Settings first and add your phone, Instagram and address so they print on the bill.", true);
+  applyGstVisibility();
+  if (!storageOk) flash("newMsg", "This browser is blocking saving (private window?). Invoices will be lost when you close it.");
+  else if (!db.settings.phone && !db.bills.length) flash("newMsg", "Start here: open Settings and add your phone, address, logo and GST details so they print on every invoice.", true);
 })();
 </script>
 </body>
