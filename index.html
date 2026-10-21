@@ -112,11 +112,14 @@
   .inv.receipt .sign { text-align: center; } .inv.receipt .sign img { margin: 4px auto; }
 
   @media print {
-    @page { margin: 10mm; }
+    /* Zero page margin leaves Chrome no room for its own header/footer (date, page
+       title, web address), so only the invoice prints. The margin goes on .inv instead. */
+    @page { margin: 0; }
     header.top, .no-print { display: none !important; }
     body, :root { background: #fff; }
     main { padding: 0; max-width: none; }
-    .inv { border: none; padding: 0; max-width: none; }
+    .inv { border: none; padding: 12mm 12mm; max-width: none; }
+    .inv.receipt { padding: 4mm; }
     .inv table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .inv .bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
