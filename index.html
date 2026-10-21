@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OG Accessories Billing</title>
+<meta name="theme-color" content="#111111" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon-192.png" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<style>
+  :root {
+    --bg: #f5f5f4; --card: #fff; --text: #1c1917; --muted: #78716c; --line: #e7e5e4;
+    --brand: #111111; --gold: #b8860b; --danger: #b91c1c; --ok: #15803d; --radius: 10px;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; color: var(--text); background: var(--bg);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  header.top { background: var(--brand); color: #fff; padding: .8rem 1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  header.top .logo { font-weight: 700; font-size: 1.15rem; letter-spacing: .5px; }
+  header.top .logo span { color: var(--gold); }
+  header.top nav { display: flex; gap: .3rem; margin-left: auto; flex-wrap: wrap; }
+  header.top nav button { background: none; color: #e7e5e4; border: 1px solid #44403c; }
+  header.top nav button.on { background: var(--gold); border-color: var(--gold); color: #111; }
+  main { max-width: 980px; margin: 0 auto; padding: 1rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
+  h2 { font-size: 1.05rem; margin: 0 0 .75rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; }
+  label { display: flex; flex-direction: column; gap: .3rem; font-size: .88rem; color: var(--muted); }
+  input, select, textarea, button { font: inherit; }
+  input, select, textarea { padding: .55rem .7rem; border: 1px solid #d6d3d1; border-radius: 8px; width: 100%; background: #fff; color: var(--text); }
+  input:focus, select:focus, textarea:focus { outline: 2px solid #fde68a; border-color: var(--gold); }
+  button { padding: .55rem 1rem; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; color: var(--text); }
+  button:hover { filter: brightness(.96); }
+  button.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+  button.gold { background: var(--gold); color: #111; border-color: var(--gold); font-weight: 600; }
+  button.wa { background: #25d366; color: #fff; border-color: #25d366; font-weight: 600; }
+  button.danger { color: var(--danger); border-color: #fecaca; }
+  button.x { border: none; background: none; color: var(--danger); font-size: 1.1rem; padding: .2rem .4rem; }
+  .row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .row.end { justify-content: flex-end; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: .5rem .45rem; border-bottom: 1px solid var(--line); text-align: left; }
+  th { font-size: .82rem; color: var(--muted); font-weight: 500; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .items input { padding: .4rem .5rem; }
+  .items td.qty input { width: 70px; }
+  .items td.price input { width: 100px; }
+  .totals { max-width: 340px; margin-left: auto; }
+  .totals div { display: flex; justify-content: space-between; padding: .2rem 0; }
+  .totals .grand { font-size: 1.3rem; font-weight: 700; border-top: 1px solid var(--line); margin-top: .3rem; padding-top: .5rem; }
+  .muted { color: var(--muted); }
+  .msg { padding: .6rem .8rem; border-radius: 8px; margin-bottom: .75rem; }
+  .msg.err { background: #fee2e2; color: var(--danger); }
+  .msg.ok { background: #dcfce7; color: var(--ok); }
+  .badge { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font-size: .78rem; background: #f5f5f4; border: 1px solid var(--line); }
+  .badge.paid { background: #dcfce7; color: var(--ok); border-color: #bbf7d0; }
+  .badge.due { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+  tr.click { cursor: pointer; } tr.click:hover { background: #fafaf9; }
+  .hidden { display: none !important; }
+
+  /* the bill itself */
+  .bill { max-width: 720px; margin: 0 auto; background: #fff; padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); color: #111; }
+  .bill .head { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 2px solid #111; padding-bottom: .75rem; margin-bottom: .75rem; }
+  .bill .shop { font-size: 1.6rem; font-weight: 800; letter-spacing: 1px; }
+  .bill .shop span { color: var(--gold); }
+  .bill .small { font-size: .85rem; color: #444; line-height: 1.45; }
+  .bill .title { text-align: right; }
+  .bill .title b { font-size: 1.1rem; letter-spacing: 2px; }
+  .bill .to { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; }
+  .bill table th { color: #444; border-bottom: 1px solid #111; }
+  .bill .foot { text-align: center; margin-top: 1.2rem; font-size: .9rem; color: #444; }
+  .bill .status { display: inline-block; border: 2px solid; padding: .1rem .6rem; font-weight: 700; letter-spacing: 1px; margin-top: .4rem; }
+  .bill .status.paid { color: var(--ok); } .bill .status.cod { color: #b45309; }
+
+  /* small thermal receipt (80mm) */
+  .bill.receipt { max-width: 320px; padding: .8rem; font-size: .85rem; }
+  .bill.receipt .head { flex-direction: column; text-align: center; }
+  .bill.receipt .title { text-align: center; }
+  .bill.receipt .to { flex-direction: column; gap: .3rem; }
+  .bill.receipt .shop { font-size: 1.2rem; }
+
+  @media print {
+    header.top, .no-print { display: none !important; }
+    body, :root { background: #fff; }
+    main { padding: 0; max-width: none; }
+    .bill { border: none; border-radius: 0; padding: 0; }
+    .card { border: none; padding: 0; }
+  }
+  @media (max-width: 640px) {
+    .items thead { display: none; }
+    .items tr { display: grid; grid-template-columns: 1fr 70px 100px auto; gap: .3rem; padding: .4rem 0; border-bottom: 1px solid var(--line); }
+    .items td { border: none; padding: 0; }
+    .items td.amt { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo" id="topName">OG <span>Accessories</span></div>
+  <nav>
+    <button data-tab="new" class="on">New Bill</button>
+    <button data-tab="history">Bills</button>
+    <button data-tab="products">Products</button>
+    <button data-tab="settings">Settings</button>
+  </nav>
+</header>
+
+<main>
+  <!-- NEW BILL -->
+  <section id="tab-new">
+    <div id="newMsg"></div>
+    <div class="card">
+      <h2>Customer</h2>
+      <div class="grid">
+        <label>Name<input id="cName" placeholder="Customer name" /></label>
+        <label>WhatsApp / Phone<input id="cPhone" inputmode="tel" placeholder="10-digit mobile" /></label>
+        <label>Order ID / Platform<input id="cOrder" placeholder="e.g. Insta, Meesho #1234" /></label>
+      </div>
+      <label style="margin-top:.75rem">Delivery address<textarea id="cAddr" rows="2" placeholder="House, street, city, state, pincode"></textarea></label>
+    </div>
+
+    <div class="card">
+      <h2>Items</h2>
+      <datalist id="catalog"></datalist>
+      <table class="items">
+        <thead><tr><th>Product</th><th>Qty</th><th>Price ₹</th><th class="num amt">Amount</th><th></th></tr></thead>
+        <tbody id="itemRows"></tbody>
+      </table>
+      <div class="row" style="margin-top:.6rem"><button id="addItem">+ Add item</button></div>
+    </div>
+
+    <div class="card">
+      <div class="grid">
+        <label>Discount ₹<input id="discount" type="number" min="0" step="0.01" placeholder="0" /></label>
+        <label>Shipping / delivery ₹<input id="shipping" type="number" min="0" step="0.01" placeholder="0" /></label>
+        <label>Payment
+          <select id="payMode">
+            <option value="Prepaid (UPI)">Prepaid (UPI)</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="Cash">Cash</option>
+            <option value="Bank transfer">Bank transfer</option>
+            <option value="Card">Card</option>
+          </select>
+        </label>
+        <label>Payment status
+          <select id="payStatus"><option value="PAID">Paid</option><option value="DUE">Due / COD</option></select>
+        </label>
+      </div>
+      <label style="margin-top:.75rem">Note on bill (optional)<input id="note" placeholder="e.g. Gift wrap, exchange in 7 days" /></label>
+      <div class="totals" style="margin-top:1rem">
+        <div><span>Subtotal</span><span id="tSub">₹0.00</span></div>
+        <div id="tDiscRow"><span>Discount</span><span id="tDisc">−₹0.00</span></div>
+        <div id="tShipRow"><span>Shipping</span><span id="tShip">₹0.00</span></div>
+        <div class="grand"><span>Total</span><span id="tTotal">₹0.00</span></div>
+      </div>
+      <div class="row end" style="margin-top:1rem">
+        <button id="clearBill">Clear</button>
+        <button class="gold" id="saveBill">Save &amp; show bill</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BILL VIEW -->
+  <section id="tab-view" class="hidden">
+    <div class="row no-print" style="margin-bottom:.8rem">
+      <button id="backBtn">← Back</button>
+      <span style="flex:1"></span>
+      <label class="row" style="flex-direction:row;color:var(--text)"><input type="checkbox" id="receiptMode" style="width:auto" /> Small receipt (80mm)</label>
+      <button class="wa" id="waBtn">Send on WhatsApp</button>
+      <button class="primary" id="printBtn">Print</button>
+      <button id="editBtn">Edit</button>
+      <button class="danger" id="delBtn">Delete</button>
+    </div>
+    <div id="billBox"></div>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="tab-history" class="hidden">
+    <div class="card">
+      <div class="row">
+        <input id="hSearch" placeholder="Search name, phone, bill no. or order ID…" style="flex:1" />
+        <select id="hMonth" style="width:auto"></select>
+      </div>
+      <div class="row muted" style="margin-top:.6rem" id="hSummary"></div>
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Bill</th><th>Date</th><th>Customer</th><th>Payment</th><th class="num">Total</th></tr></thead>
+        <tbody id="hRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="tab-products" class="hidden">
+    <div class="card">
+      <h2>Your products</h2>
+      <p class="muted" style="margin-top:0">Saved products show up as suggestions when you type in a bill, with their price filled in.</p>
+      <div class="row">
+        <input id="pName" placeholder="Product name, e.g. Fossil-style Chrono Watch" style="flex:2;min-width:200px" />
+        <input id="pPrice" type="number" min="0" step="0.01" placeholder="Price ₹" style="flex:1;min-width:110px" />
+        <button class="primary" id="pAdd">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <table><thead><tr><th>Product</th><th class="num">Price</th><th></th></tr></thead><tbody id="pRows"></tbody></table>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="tab-settings" class="hidden">
+    <div id="setMsg"></div>
+    <div class="card">
+      <h2>Shop details (printed on every bill)</h2>
+      <div class="grid">
+        <label>Shop name<input id="sName" /></label>
+        <label>Phone / WhatsApp<input id="sPhone" /></label>
+        <label>Instagram<input id="sInsta" placeholder="@yourpage" /></label>
+        <label>Email / Website<input id="sWeb" /></label>
+        <label>GSTIN (optional)<input id="sGst" /></label>
+        <label>UPI ID (optional)<input id="sUpi" placeholder="name@upi" /></label>
+        <label>Bill number prefix<input id="sPrefix" /></label>
+      </div>
+      <label style="margin-top:.75rem">Address<textarea id="sAddr" rows="2"></textarea></label>
+      <label style="margin-top:.75rem">Thank-you line at the bottom<input id="sFooter" /></label>
+      <div class="row end" style="margin-top:1rem"><button class="primary" id="sSave">Save</button></div>
+    </div>
+    <div class="card">
+      <h2>Backup</h2>
+      <p class="muted" style="margin-top:0">Your bills are saved only in this browser on this computer. Download a backup now and then, so you never lose them (for example if browser history is cleared).</p>
+      <div class="row">
+        <button id="exportBtn">Download backup</button>
+        <label class="row" style="flex-direction:row"><button id="importBtn" type="button">Restore from backup…</button>
+          <input type="file" id="importFile" accept="application/json" class="hidden" /></label>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const KEY = "og_billing_v1";
+  const $ = id => document.getElementById(id);
+
+  // ---------- storage ----------
+  const DEFAULT = {
+    settings: {
+      name: "OG Accessories", phone: "", insta: "", web: "", gst: "", upi: "", prefix: "OG-",
+      addr: "", footer: "Thank you for shopping with us! 🖤",
+    },
+    nextNo: 1,
+    bills: [],
+    products: [
+      { name: "Watch", price: 0 }, { name: "Wallet", price: 0 }, { name: "Sunglasses / Shades", price: 0 },
+      { name: "Perfume", price: 0 }, { name: "Cap", price: 0 }, { name: "Hat", price: 0 },
+      { name: "Belt", price: 0 }, { name: "Side bag", price: 0 }, { name: "Handbag", price: 0 },
+    ],
+  };
+  let db, storageOk = true;
+  try { db = JSON.parse(localStorage.getItem(KEY)) || structuredClone(DEFAULT); }
+  catch { db = structuredClone(DEFAULT); storageOk = false; }
+  db.settings = { ...DEFAULT.settings, ...db.settings };
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
+    catch { storageOk = false; return false; }
+  }
+
+  // ---------- money: kept in paise (whole numbers) so totals never drift ----------
+  const toPaise = v => Math.round((parseFloat(v) || 0) * 100);
+  const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" });
+  const money = p => inr.format(p / 100);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmtDate = iso => new Date(iso).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+
+  function totals(b) {
+    const sub = b.items.reduce((s, i) => s + Math.round(i.qty * i.price), 0);
+    return { sub, total: Math.max(0, sub - b.discount + b.shipping) };
+  }
+
+  // ---------- tabs ----------
+  let viewing = null, editing = null;
+  function show(tab) {
+    for (const s of document.querySelectorAll("main > section")) s.classList.toggle("hidden", s.id !== "tab-" + tab);
+    for (const b of document.querySelectorAll("header nav button")) b.classList.toggle("on", b.dataset.tab === tab);
+    if (tab === "history") renderHistory();
+    if (tab === "products") renderProducts();
+    if (tab === "settings") loadSettings();
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll("header nav button").forEach(b => b.onclick = () => show(b.dataset.tab));
+
+  function flash(el, text, ok) {
+    $(el).innerHTML = text ? `<div class="msg ${ok ? "ok" : "err"}">${esc(text)}</div>` : "";
+  }
+
+  // ---------- new bill form ----------
+  function refreshCatalog() {
+    $("catalog").innerHTML = db.products.map(p => `<option value="${esc(p.name)}"></option>`).join("");
+  }
+  function addRow(item = { name: "", qty: 1, price: "" }) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><input class="iname" list="catalog" placeholder="Product" value="${esc(item.name)}" /></td>
+      <td class="qty"><input class="iqty" type="number" min="1" step="1" value="${esc(item.qty)}" /></td>
+      <td class="price"><input class="iprice" type="number" min="0" step="0.01" value="${esc(item.price)}" placeholder="0" /></td>
+      <td class="num amt">₹0.00</td>
+      <td><button class="x" title="Remove">✕</button></td>`;
+    const name = tr.querySelector(".iname"), price = tr.querySelector(".iprice");
+    name.addEventListener("change", () => {
+      const p = db.products.find(p => p.name.toLowerCase() === name.value.trim().toLowerCase());
+      if (p && p.price && !price.value) price.value = (p.price / 100).toString();
+      recalc();
+    });
+    tr.querySelector(".x").onclick = () => { tr.remove(); if (!$("itemRows").children.length) addRow(); recalc(); };
+    tr.querySelectorAll("input").forEach(i => i.addEventListener("input", recalc));
+    $("itemRows").appendChild(tr);
+    recalc();
+    return tr;
+  }
+  $("addItem").onclick = () => addRow().querySelector(".iname").focus();
+  ["discount", "shipping"].forEach(id => $(id).addEventListener("input", recalc));
+  $("payMode").addEventListener("change", () => {
+    $("payStatus").value = $("payMode").value === "Cash on Delivery" ? "DUE" : "PAID";
+  });
+
+  function readForm() {
+    const items = [...$("itemRows").children].map(tr => ({
+      name: tr.querySelector(".iname").value.trim(),
+      qty: Math.max(0, parseInt(tr.querySelector(".iqty").value, 10) || 0),
+      price: toPaise(tr.querySelector(".iprice").value),
+    })).filter(i => i.name || i.price);
+    return {
+      customer: { name: $("cName").value.trim(), phone: $("cPhone").value.trim(), addr: $("cAddr").value.trim() },
+      orderRef: $("cOrder").value.trim(),
+      items, discount: toPaise($("discount").value), shipping: toPaise($("shipping").value),
+      payMode: $("payMode").value, payStatus: $("payStatus").value, note: $("note").value.trim(),
+    };
+  }
+  function recalc() {
+    const b = readForm();
+    [...$("itemRows").children].forEach(tr => {
+      const q = parseInt(tr.querySelector(".iqty").value, 10) || 0;
+      tr.querySelector(".amt").textContent = money(Math.round(q * toPaise(tr.querySelector(".iprice").value)));
+    });
+    const t = totals(b);
+    $("tSub").textContent = money(t.sub);
+    $("tDisc").textContent = "−" + money(b.discount);
+    $("tShip").textContent = money(b.shipping);
+    $("tDiscRow").classList.toggle("hidden", !b.discount);
+    $("tShipRow").classList.toggle("hidden", !b.shipping);
+    $("tTotal").textContent = money(t.total);
+  }
+  function fillForm(b) {
+    $("cName").value = b?.customer.name || ""; $("cPhone").value = b?.customer.phone || "";
+    $("cAddr").value = b?.customer.addr || ""; $("cOrder").value = b?.orderRef || "";
+    $("discount").value = b?.discount ? b.discount / 100 : ""; $("shipping").value = b?.shipping ? b.shipping / 100 : "";
+    $("payMode").value = b?.payMode || "Prepaid (UPI)"; $("payStatus").value = b?.payStatus || "PAID";
+    $("note").value = b?.note || "";
+    $("itemRows").innerHTML = "";
+    (b?.items.length ? b.items : [{ name: "", qty: 1, price: "" }])
+      .forEach(i => addRow({ name: i.name, qty: i.qty, price: i.price === "" ? "" : i.price / 100 }));
+    $("saveBill").textContent = b ? `Update bill ${b.no}` : "Save & show bill";
+    recalc();
+  }
+  $("clearBill").onclick = () => { editing = null; fillForm(null); flash("newMsg", ""); };
+
+  $("saveBill").onclick = () => {
+    const f = readForm();
+    if (!f.customer.name) return flash("newMsg", "Please enter the customer name.");
+    if (!f.items.length) return flash("newMsg", "Please add at least one item.");
+    const bad = f.items.find(i => !i.name || i.qty < 1);
+    if (bad) return flash("newMsg", "Every item needs a name and a quantity of 1 or more.");
+    if (f.discount > totals(f).sub) return flash("newMsg", "Discount is more than the items total.");
+    let bill;
+    if (editing) {
+      bill = Object.assign(editing, f, { updatedAt: new Date().toISOString() });
+    } else {
+      bill = { id: Date.now().toString(36), no: db.settings.prefix + String(db.nextNo).padStart(4, "0"),
+               date: new Date().toISOString(), ...f };
+      db.nextNo += 1;
+      db.bills.unshift(bill);
+    }
+    // remember new product names (and their latest price) for next time
+    for (const i of f.items) {
+      const p = db.products.find(p => p.name.toLowerCase() === i.name.toLowerCase());
+      if (p) { if (i.price) p.price = i.price; } else db.products.push({ name: i.name, price: i.price });
+    }
+    if (!save()) flash("newMsg", "Warning: this browser is not letting the app save. Download a backup in Settings.");
+    else flash("newMsg", "");
+    editing = null;
+    fillForm(null);
+    refreshCatalog();
+    openBill(bill.id);
+  };
+
+  // ---------- bill view ----------
+  function billHtml(b) {
+    const s = db.settings, t = totals(b);
+    const contact = [s.phone && "📞 " + esc(s.phone), s.insta && "📷 " + esc(s.insta), s.web && esc(s.web)].filter(Boolean).join(" · ");
+    const nameHtml = esc(s.name).replace(/^OG\b/, "OG<span>").replace(/(<span>.*)$/, "$1</span>");
+    return `
+      <div class="bill ${$("receiptMode").checked ? "receipt" : ""}">
+        <div class="head">
+          <div>
+            <div class="shop">${nameHtml}</div>
+            <div class="small">${esc(s.addr).replace(/\n/g, "<br>")}${s.addr ? "<br>" : ""}${contact}${s.gst ? "<br>GSTIN: " + esc(s.gst) : ""}</div>
+          </div>
+          <div class="title">
+            <b>INVOICE</b>
+            <div class="small">Bill No: <b>${esc(b.no)}</b><br>${fmtDate(b.date)}${b.orderRef ? "<br>Order: " + esc(b.orderRef) : ""}</div>
+          </div>
+        </div>
+        <div class="to">
+          <div class="small"><b>Bill to:</b><br>${esc(b.customer.name)}${b.customer.phone ? "<br>" + esc(b.customer.phone) : ""}${b.customer.addr ? "<br>" + esc(b.customer.addr).replace(/\n/g, "<br>") : ""}</div>
+          <div class="small" style="text-align:right"><b>Payment:</b><br>${esc(b.payMode)}<br>
+            <span class="status ${b.payStatus === "PAID" ? "paid" : "cod"}">${b.payStatus === "PAID" ? "PAID" : "AMOUNT DUE"}</span></div>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Amount</th></tr></thead>
+          <tbody>${b.items.map((i, n) => `<tr><td>${n + 1}</td><td>${esc(i.name)}</td><td class="num">${i.qty}</td>
+            <td class="num">${money(i.price)}</td><td class="num">${money(Math.round(i.qty * i.price))}</td></tr>`).join("")}</tbody>
+        </table>
+        <div class="totals" style="margin-top:.75rem">
+          <div><span>Subtotal</span><span>${money(t.sub)}</span></div>
+          ${b.discount ? `<div><span>Discount</span><span>−${money(b.discount)}</span></div>` : ""}
+          ${b.shipping ? `<div><span>Shipping</span><span>${money(b.shipping)}</span></div>` : ""}
+          <div class="grand"><span>Total</span><span>${money(t.total)}</span></div>
+        </div>
+        ${b.payStatus !== "PAID" && s.upi ? `<p class="small" style="margin-top:.8rem">Pay by UPI: <b>${esc(s.upi)}</b></p>` : ""}
+        ${b.note ? `<p class="small"><b>Note:</b> ${esc(b.note)}</p>` : ""}
+        <div class="foot">${esc(s.footer)}</div>
+      </div>`;
+  }
+  function openBill(id) {
+    viewing = db.bills.find(b => b.id === id);
+    if (!viewing) return;
+    $("billBox").innerHTML = billHtml(viewing);
+    for (const s of document.querySelectorAll("main > section")) s.classList.toggle("hidden", s.id !== "tab-view");
+    window.scrollTo(0, 0);
+  }
+  $("receiptMode").onchange = () => viewing && ($("billBox").innerHTML = billHtml(viewing));
+  $("printBtn").onclick = () => window.print();
+  $("backBtn").onclick = () => show("history");
+  $("editBtn").onclick = () => { editing = viewing; fillForm(viewing); show("new"); };
+  $("delBtn").onclick = () => {
+    if (!confirm(`Delete bill ${viewing.no}? This cannot be undone.`)) return;
+    db.bills = db.bills.filter(b => b !== viewing);
+    save();
+    show("history");
+  };
+  $("waBtn").onclick = () => {
+    const b = viewing, s = db.settings, t = totals(b);
+    const lines = [`*${s.name}*`, `Invoice ${b.no} · ${fmtDate(b.date)}`, "", `Hi ${b.customer.name}, here is your bill:`, ""];
+    b.items.forEach(i => lines.push(`• ${i.name} × ${i.qty} = ${money(Math.round(i.qty * i.price))}`));
+    lines.push("");
+    if (b.discount) lines.push(`Discount: −${money(b.discount)}`);
+    if (b.shipping) lines.push(`Shipping: ${money(b.shipping)}`);
+    lines.push(`*Total: ${money(t.total)}*`);
+    lines.push(`Payment: ${b.payMode} (${b.payStatus === "PAID" ? "Paid ✅" : "Due"})`);
+    if (b.payStatus !== "PAID" && s.upi) lines.push(`UPI: ${s.upi}`);
+    if (b.note) lines.push(`Note: ${b.note}`);
+    lines.push("", s.footer);
+    if (s.insta) lines.push(`Follow us: ${s.insta}`);
+    const digits = (b.customer.phone || "").replace(/\D/g, "");
+    const to = digits.length === 10 ? "91" + digits : digits;
+    window.open(`https://wa.me/${to}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener");
+  };
+
+  // ---------- history ----------
+  function renderHistory() {
+    const months = [...new Set(db.bills.map(b => b.date.slice(0, 7)))];
+    const cur = $("hMonth").value;
+    $("hMonth").innerHTML = `<option value="">All months</option>` + months.map(m =>
+      `<option value="${m}">${new Date(m + "-01").toLocaleString("en-IN", { month: "long", year: "numeric" })}</option>`).join("");
+    if (months.includes(cur)) $("hMonth").value = cur;
+    const q = $("hSearch").value.trim().toLowerCase(), m = $("hMonth").value;
+    const list = db.bills.filter(b => (!m || b.date.startsWith(m)) &&
+      (!q || [b.no, b.customer.name, b.customer.phone, b.orderRef].join(" ").toLowerCase().includes(q)));
+    const sum = list.reduce((s, b) => s + totals(b).total, 0);
+    const due = list.filter(b => b.payStatus !== "PAID").reduce((s, b) => s + totals(b).total, 0);
+    $("hSummary").innerHTML = `${list.length} bills · Total <b style="color:var(--text)">&nbsp;${money(sum)}</b>${due ? ` · Due/COD ${money(due)}` : ""}`;
+    $("hRows").innerHTML = list.length ? list.map(b => `
+      <tr class="click" data-id="${b.id}">
+        <td><b>${esc(b.no)}</b></td><td>${fmtDate(b.date)}</td>
+        <td>${esc(b.customer.name)}<div class="muted" style="font-size:.8rem">${esc(b.customer.phone)}</div></td>
+        <td><span class="badge ${b.payStatus === "PAID" ? "paid" : "due"}">${b.payStatus === "PAID" ? "Paid" : "Due"}</span> <span class="muted" style="font-size:.8rem">${esc(b.payMode)}</span></td>
+        <td class="num">${money(totals(b).total)}</td>
+      </tr>`).join("") : `<tr><td colspan="5" class="muted">No bills yet.</td></tr>`;
+    document.querySelectorAll("#hRows tr.click").forEach(tr => tr.onclick = () => openBill(tr.dataset.id));
+  }
+  $("hSearch").oninput = renderHistory;
+  $("hMonth").onchange = renderHistory;
+
+  // ---------- products ----------
+  function renderProducts() {
+    $("pRows").innerHTML = db.products.length ? db.products.map((p, i) => `
+      <tr><td>${esc(p.name)}</td>
+        <td class="num"><input type="number" min="0" step="0.01" data-i="${i}" value="${p.price ? p.price / 100 : ""}" placeholder="—" style="width:110px;text-align:right" /></td>
+        <td class="num"><button class="x" data-del="${i}" title="Remove">✕</button></td></tr>`).join("")
+      : `<tr><td colspan="3" class="muted">No products yet.</td></tr>`;
+    document.querySelectorAll("#pRows input").forEach(inp => inp.onchange = () => {
+      db.products[inp.dataset.i].price = toPaise(inp.value); save(); refreshCatalog();
+    });
+    document.querySelectorAll("#pRows [data-del]").forEach(btn => btn.onclick = () => {
+      db.products.splice(btn.dataset.del, 1); save(); refreshCatalog(); renderProducts();
+    });
+  }
+  $("pAdd").onclick = () => {
+    const name = $("pName").value.trim();
+    if (!name) return;
+    const existing = db.products.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (existing) existing.price = toPaise($("pPrice").value);
+    else db.products.push({ name, price: toPaise($("pPrice").value) });
+    db.products.sort((a, b) => a.name.localeCompare(b.name));
+    save(); refreshCatalog(); renderProducts();
+    $("pName").value = ""; $("pPrice").value = ""; $("pName").focus();
+  };
+
+  // ---------- settings & backup ----------
+  const SET = { sName: "name", sPhone: "phone", sInsta: "insta", sWeb: "web", sGst: "gst", sUpi: "upi", sPrefix: "prefix", sAddr: "addr", sFooter: "footer" };
+  function loadSettings() { for (const [id, k] of Object.entries(SET)) $(id).value = db.settings[k] || ""; }
+  $("sSave").onclick = () => {
+    for (const [id, k] of Object.entries(SET)) db.settings[k] = $(id).value.trim();
+    if (!db.settings.name) db.settings.name = "OG Accessories";
+    save(); setTopName();
+    flash("setMsg", "Saved. New details will show on every bill.", true);
+  };
+  function setTopName() {
+    $("topName").innerHTML = esc(db.settings.name).replace(/^OG\b(.*)$/, "OG<span>$1</span>");
+    document.title = db.settings.name + " Billing";
+  }
+  $("exportBtn").onclick = () => {
+    const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
+    const a = Object.assign(document.createElement("a"), {
+      href: URL.createObjectURL(blob), download: `og-billing-backup-${new Date().toISOString().slice(0, 10)}.json`,
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+  $("importBtn").onclick = () => $("importFile").click();
+  $("importFile").onchange = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!Array.isArray(data.bills) || !data.settings) throw new Error("not a backup");
+      if (!confirm(`Restore ${data.bills.length} bills from this backup? It replaces what is here now.`)) return;
+      db = { ...structuredClone(DEFAULT), ...data, settings: { ...DEFAULT.settings, ...data.settings } };
+      save(); setTopName(); refreshCatalog(); loadSettings();
+      flash("setMsg", `Restored ${db.bills.length} bills.`, true);
+    } catch {
+      flash("setMsg", "That file is not a valid backup.");
+    }
+    e.target.value = "";
+  };
+
+  // ---------- offline / install ----------
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+  // Ask the browser to keep our data even when the phone is low on space.
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+
+  // ---------- start ----------
+  setTopName();
+  refreshCatalog();
+  fillForm(null);
+  if (!storageOk) flash("newMsg", "This browser is blocking saving (private window?). Bills will be lost when you close it.");
+  else if (!db.settings.phone && !db.bills.length) flash("newMsg", "Tip: open Settings first and add your phone, Instagram and address so they print on the bill.", true);
+})();
+</script>
+</body>
+</html>
