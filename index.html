@@ -336,17 +336,17 @@
   const DEFAULT_SETTINGS = {
     name: "OG Accessories", phone: "", email: "", insta: "", addr: "", state: "03", prefix: "OG-",
     gstOn: false, gstin: "", inclusive: true, roundOff: true,
-    upi: "", bank: "", acc: "", ifsc: "", logo: "", sign: "",
+    upi: "", bank: "", acc: "", ifsc: "", logo: "logo.png", sign: "",
     terms: "Goods once sold can be exchanged within 7 days with original tags and packing.\nNo cash refunds.\nSubject to Zira, Punjab jurisdiction.",
     footer: "Thank you for shopping with OG Accessories! 🖤",
   };
   // Typical HSN codes for accessories. Rates are a starting point; confirm with a CA.
   const DEFAULT_PRODUCTS = [
-    { name: "Watch", price: 0, hsn: "9102", gst: 18 },
-    { name: "Wallet", price: 0, hsn: "4202", gst: 18 },
+    { name: "Watch", price: 200000, hsn: "9102", gst: 18 },
+    { name: "Wallet", price: 90000, hsn: "4202", gst: 18 },
     { name: "Sunglasses / Shades", price: 0, hsn: "9004", gst: 18 },
-    { name: "Perfume", price: 0, hsn: "3303", gst: 18 },
-    { name: "Cap", price: 0, hsn: "6505", gst: 5 },
+    { name: "Perfume", price: 120000, hsn: "3303", gst: 18 },
+    { name: "Cap", price: 80000, hsn: "6505", gst: 5 },
     { name: "Hat", price: 0, hsn: "6505", gst: 5 },
     { name: "Belt", price: 0, hsn: "4203", gst: 18 },
     { name: "Side bag", price: 0, hsn: "4202", gst: 18 },
@@ -359,8 +359,12 @@
   // Version 1 products had only name + price: give them HSN/GST from the defaults when names match.
   db.products = (db.products || []).map(p => {
     const d = DEFAULT_PRODUCTS.find(d => d.name.toLowerCase() === p.name.toLowerCase());
-    return { hsn: d ? d.hsn : "", gst: d ? d.gst : 18, ...p };
+    const q = { hsn: d ? d.hsn : "", gst: d ? d.gst : 18, ...p };
+    if (!q.price && d) q.price = d.price; // built-in prices fill any product left at 0
+    return q;
   });
+  // the shop logo ships with the app; once Settings is saved, the user's choice (even "none") wins
+  if (!db.settings.setupDone && !db.settings.logo) db.settings.logo = DEFAULT_SETTINGS.logo;
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
     catch { storageOk = false; return false; }
