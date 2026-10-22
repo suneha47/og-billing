@@ -1,7 +1,7 @@
 // Keeps the app working with no internet. Bump VERSION when files change so
 // phones pick up the new copy on their next online start.
-const VERSION = "og-billing-v6";
-const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./logo.png"];
+const VERSION = "og-billing-v7";
+const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./logo.png", "./sign.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

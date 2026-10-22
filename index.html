@@ -336,7 +336,7 @@
   const DEFAULT_SETTINGS = {
     name: "OG Accessories", phone: "", email: "", insta: "", addr: "", state: "03", prefix: "OG-",
     gstOn: false, gstin: "", inclusive: true, roundOff: true,
-    upi: "", bank: "", acc: "", ifsc: "", logo: "logo.png", sign: "",
+    upi: "", bank: "", acc: "", ifsc: "", logo: "logo.png", sign: "sign.png",
     terms: "Goods once sold can be exchanged within 7 days with original tags and packing.\nNo cash refunds.\nSubject to Zira, Punjab jurisdiction.",
     footer: "Thank you for shopping with OG Accessories! 🖤",
   };
@@ -363,8 +363,9 @@
     if (!q.price && d) q.price = d.price; // built-in prices fill any product left at 0
     return q;
   });
-  // the shop logo ships with the app; once Settings is saved, the user's choice (even "none") wins
+  // the shop logo and signature ship with the app; once Settings is saved, the user's choice (even "none") wins
   if (!db.settings.setupDone && !db.settings.logo) db.settings.logo = DEFAULT_SETTINGS.logo;
+  if (!db.settings.setupDone && !db.settings.sign) db.settings.sign = DEFAULT_SETTINGS.sign;
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(db)); return true; }
     catch { storageOk = false; return false; }
