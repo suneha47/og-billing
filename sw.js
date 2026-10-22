@@ -1,6 +1,6 @@
 // Keeps the app working with no internet. Bump VERSION when files change so
 // phones pick up the new copy on their next online start.
-const VERSION = "og-billing-v3";
+const VERSION = "og-billing-v4";
 const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {

@@ -847,6 +847,8 @@
     if (!s.prefix) s.prefix = "OG-";
     s.gstOn = $("sGstOn").checked; s.inclusive = $("sInclusive").value === "1"; s.roundOff = $("sRound").checked;
     s.logo = pendingImgs.logo || ""; s.sign = pendingImgs.sign || "";
+    s.setupDone = true;
+    flash("newMsg", "");
     if (s.gstOn && s.gstin && !/^[0-9]{2}[A-Z0-9]{13}$/.test(s.gstin)) return flash("setMsg", "GSTIN should be 15 characters, e.g. 03ABCDE1234F1Z5.");
     if (s.gstOn && s.gstin && s.gstin.slice(0, 2) !== s.state) flash("setMsg", "Saved. Note: your GSTIN starts with " + s.gstin.slice(0, 2) + " but your state is " + s.state + ". Please check.", false);
     else flash("setMsg", "Saved. New invoices will use these details.", true);
@@ -897,7 +899,8 @@
   fillForm(null);
   applyGstVisibility();
   if (!storageOk) flash("newMsg", "This browser is blocking saving (private window?). Invoices will be lost when you close it.");
-  else if (!db.settings.phone && !db.bills.length) flash("newMsg", "Start here: open Settings and add your phone, address, logo and GST details so they print on every invoice.", true);
+  // older saves have no setupDone flag, so any filled contact detail also counts as set up
+  else if (!(db.settings.setupDone || db.settings.phone || db.settings.addr || db.settings.gstin) && !db.bills.length) flash("newMsg", "Start here: open Settings and add your phone, address, logo and GST details so they print on every invoice.", true);
 })();
 </script>
 </body>
