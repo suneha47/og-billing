@@ -708,7 +708,69 @@
     window.scrollTo(0, 0);
   }
   $("receiptMode").onchange = () => viewing && ($("billBox").innerHTML = invoiceHtml(viewing));
+  // Installed on the home screen, phones ignore window.print(). So there the app builds the PDF
+  // itself and opens the phone's share sheet (Save to Files / Drive / WhatsApp / Print).
+  const isInstalledApp = () =>
+    matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true;
+  const loadScript = src => new Promise((ok, bad) => {
+    if (document.querySelector(`script[src="${src}"]`)) return ok();
+    const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => bad(new Error("load " + src));
+    document.head.appendChild(s);
+  });
+  async function billPdf(bill, receipt) {
+    await loadScript("lib/html2canvas.min.js");
+    await loadScript("lib/jspdf.umd.min.js");
+    const box = document.createElement("div");
+    box.style.cssText = `position:fixed;left:-10000px;top:0;width:${receipt ? 320 : 794}px;background:#fff`;
+    box.innerHTML = invoiceHtml(bill);
+    const inv = box.firstElementChild;
+    inv.style.border = "none"; inv.style.borderRadius = "0"; inv.style.margin = "0";
+    document.body.appendChild(box);
+    try {
+      await Promise.all([...box.querySelectorAll("img")].map(i => i.complete ? 0 : new Promise(r => (i.onload = i.onerror = r))));
+      // windowWidth keeps the desktop layout even on a narrow phone screen
+      const canvas = await html2canvas(inv, { scale: 2, backgroundColor: "#fff", windowWidth: 1024, useCORS: true });
+      const { jsPDF } = window.jspdf;
+      const name = `${bill.no} ${bill.customer.name || ""}`.trim().replace(/[\\/:*?"<>|]+/g, "-") + ".pdf";
+      let pdf;
+      if (receipt) {
+        const w = 80, h = (canvas.height * w) / canvas.width;
+        pdf = new jsPDF({ unit: "mm", format: [w, Math.max(h, 40)] });
+        pdf.addImage(canvas, "JPEG", 0, 0, w, h);
+      } else {
+        pdf = new jsPDF({ unit: "mm", format: "a4" });
+        const pw = 210, ph = 297, pxPerPage = Math.floor((canvas.width * ph) / pw);
+        for (let y = 0, first = true; y < canvas.height; y += pxPerPage, first = false) {
+          const slice = document.createElement("canvas");
+          slice.width = canvas.width; slice.height = Math.min(pxPerPage, canvas.height - y);
+          const c = slice.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, slice.width, slice.height);
+          c.drawImage(canvas, 0, -y);
+          if (!first) pdf.addPage();
+          pdf.addImage(slice.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, pw, (slice.height * pw) / canvas.width);
+        }
+      }
+      return new File([pdf.output("blob")], name, { type: "application/pdf" });
+    } finally { box.remove(); }
+  }
+  async function savePdf() {
+    const btn = $("printBtn"), label = btn.textContent;
+    btn.disabled = true; btn.textContent = "Making PDF…";
+    try {
+      const file = await billPdf(viewing, $("receiptMode").checked);
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: file.name }); return; }
+        catch (e) { if (e.name === "AbortError") return; }
+      }
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(file); a.download = file.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+    } catch (e) {
+      alert("Could not make the PDF. Please check your internet once and try again.\n" + e.message);
+    } finally { btn.disabled = false; btn.textContent = label; }
+  }
   $("printBtn").onclick = () => {
+    if (isInstalledApp()) return savePdf();
     const old = document.title;
     document.title = `${viewing.no} ${viewing.customer.name}`;  // becomes the PDF file name
     window.print();
